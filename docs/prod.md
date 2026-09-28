@@ -303,6 +303,62 @@ journalctl -u mi-api -u mi-api-worker -f
 journalctl -u mi-api -u mi-api-worker -n 100 --no-pager
 ```
 
+### Filtrar errores y ventanas de tiempo en logs (Journald)
+
+```bash
+# Filtrar exclusivamente errores (sin ruido informativo)
+journalctl -u mi-api -p err --no-pager
+journalctl -u mi-api-worker -p err --no-pager
+
+# Ver logs de una ventana de tiempo específica (ejemplo: últimos 15 minutos)
+journalctl -u mi-api --since "15 minutes ago"
+
+# Ver logs generados desde el último reinicio del servidor
+journalctl -u mi-api -b
+
+# Verificar uso de espacio en disco de los registros del sistema
+journalctl --disk-usage
+```
+
+### Pausar, deshabilitar o reanudar servicios (Mantenimiento)
+
+```bash
+# Pausar temporalmente ambos servicios (solo en la sesión actual)
+sudo systemctl stop mi-api mi-api-worker
+sudo systemctl status mi-api mi-api-worker
+
+# Evitar que arranquen automáticamente en reinicios del host
+sudo systemctl disable mi-api mi-api-worker
+sudo systemctl is-enabled mi-api mi-api-worker
+
+# Volver a habilitar el arranque automático e iniciar ambos servicios de inmediato
+sudo systemctl enable --now mi-api mi-api-worker
+sudo systemctl status mi-api mi-api-worker
+```
+
+### Diagnóstico de red y salud de la API (Smoke Test)
+
+```bash
+# Probar respuesta HTTP real del endpoint de salud
+curl -I http://localhost:8001/health
+
+# Comprobar que el puerto esté activo y en escucha en el sistema
+ss -tulpn | grep 8001
+```
+
+### Diagnóstico del contenedor de base de datos (Podman)
+
+```bash
+# Verificar estado y tiempo de actividad del contenedor de PostgreSQL
+podman ps -f name=mi_api_db
+
+# Ver logs del contenedor ante fallos de conexión o autenticación
+podman logs mi_api_db
+
+# Reiniciar el contenedor de base de datos de forma aislada
+podman restart mi_api_db
+```
+
 ---
 
 ## 📋 Referencia de Comandos (Producción)
