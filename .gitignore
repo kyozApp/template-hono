@@ -1,28 +1,17 @@
-# dev
-.yarn/
-!.yarn/releases
-.vscode/*
-!.vscode/launch.json
-!.vscode/*.code-snippets
-.idea/workspace.xml
-.idea/usage.statistics.xml
-.idea/shelf
-
-# deps
+# Dependencias del proyecto
 node_modules/
 
-# env
-.env
-.env.production
+# Prisma
+/migrations/
 
-# logs
-logs/
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
-
-# misc
+# Basura del sistema
 .DS_Store
+Thumbs.db
+
+# Proyecto compilado
+/dist/
+
+# Variables de entorno
+.env
+.env.*
+!.env.example

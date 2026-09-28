@@ -6,7 +6,18 @@
 		"useIgnoreFile": true
 	},
 	"files": {
-		"ignoreUnknown": false
+		"ignoreUnknown": false,
+		"includes": [
+			"**",
+			"!!**/dist",
+			"!!**/node_modules",
+			"!!**/.pnpm-store",
+			"!!**/migrations",
+			"!!**/src/generated",
+			"!!**/src/prisma/contract.d.ts",
+			"!!**/src/prisma/contract.json",
+			"!!**/scripts/*.json"
+		]
 	},
 	"formatter": {
 		"enabled": true,
@@ -15,7 +26,23 @@
 	"linter": {
 		"enabled": true,
 		"rules": {
-			"preset": "recommended"
+			"preset": "recommended",
+			"style": {
+				"noNonNullAssertion": "off",
+				"noExcessiveLinesPerFile": {
+					"level": "warn",
+					"options": {
+						"maxLines": 1500,
+						"skipBlankLines": true
+					}
+				}
+			},
+			"correctness": {
+				"noUnusedVariables": "warn"
+			},
+			"suspicious": {
+				"noExplicitAny": "off"
+			}
 		}
 	},
 	"javascript": {
@@ -27,7 +54,24 @@
 		"enabled": true,
 		"actions": {
 			"source": {
-				"organizeImports": "on"
+				"organizeImports": {
+					"level": "on",
+					"options": {
+						"groups": [
+							":NODE:",
+							":BLANK_LINE:",
+							["hono", "hono/**", "@hono/**", "@scalar/**"],
+							":BLANK_LINE:",
+							":PACKAGE:",
+							":BLANK_LINE:",
+							["@/**", "#lib/**"],
+							":BLANK_LINE:",
+							":PATH:"
+						]
+					}
+				},
+				"useSortedProperties": "on",
+				"useSortedPackageJson": "on"
 			}
 		}
 	}

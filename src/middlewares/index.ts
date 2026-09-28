@@ -1,0 +1,29 @@
+import type { Hono } from "hono";
+import { cors } from "hono/cors";
+import { requestId } from "hono/request-id";
+import { timeout } from "hono/timeout";
+
+import { env } from "../config/env.js";
+import { customTimeoutException } from "./timeoutException.js";
+
+/**
+ * Registra los middlewares transversales sobre la instancia de Hono.
+ */
+export const registerMiddlewares = (app: Hono) => {
+	// 1. Trazabilidad: identificador único de 21 caracteres por petición
+	app.use("*", requestId({ limitLength: 21 }));
+
+	// 2. Políticas de CORS utilizando las variables de entorno validadas
+	app.use(
+		"*",
+		cors({
+			origin: env.CORS_ORIGIN,
+			allowMethods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+			allowHeaders: ["Content-Type", "Authorization"],
+			credentials: true,
+		}),
+	);
+
+	// 3. Control de tiempo de espera (10 segundos)
+	app.use("*", timeout(10000, customTimeoutException));
+};
