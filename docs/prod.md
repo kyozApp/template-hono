@@ -7,14 +7,14 @@ Runbook de despliegue y operación para ejecutar **mi-api** en producción con
 
 ## ✅ Requisitos Previos
 
-- **Servidor Linux** (Debian, Ubuntu, Rocky o Enterprise Linux) con `systemd`.
+- **Servidor Linux** Ubuntu con `systemd`.
 - **Node.js**: `24.21.0`
-- **pnpm**: `12.3.4` (o superior)
-- **Podman Compose** (o Docker Compose) instalado en el servidor.
+- **pnpm**: `12.3.4`
+- **Podman Compose** instalado en el servidor.
 - Acceso SSH al host y permisos de `sudo` para administrar `/etc/systemd/system/`.
 
 <details>
-<summary>📋 Preparar un servidor VPS nuevo desde cero (Debian / Ubuntu)</summary>
+<summary>📋 Preparar un servidor VPS nuevo desde cero en Ubuntu</summary>
 
 Si tu servidor VPS está recién creado, ejecuta estos pasos para instalar y configurar el entorno:
 

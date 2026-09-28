@@ -24,6 +24,8 @@ En Zed, presiona `F1`, escribe **`install dev extension`** y selecciona la carpe
 
 ## ✅ Requisitos Previos
 
+- **Node.js**: `24.21.0`
+- **pnpm**: `12.3.4`
 - **PostgreSQL 18** accesible en el puerto `5432` (stack central de `~/proyectos/services`).
 
 ---
