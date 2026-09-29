@@ -30,8 +30,6 @@ Edita los siguientes archivos para adaptar la plantilla al nombre de tu proyecto
 - **`docs/prod.md`**:
   - Con el buscador (`Ctrl + F`) reemplaza en este archivo:
     - `mi-api` por el nombre de tu proyecto.
-    - `mi-usuario` por tu usuario en el VPS.
-    - `mi-servidor` por la IP o dominio de tu VPS.
   - Actualiza el campo `Description` de cada servicio en Systemd:
     - En `mi-api.service`: descripción de tu API (`Mi API REST Service`).
     - En `mi-api-worker.service`: descripción del worker de tu API (`Mi API Worker`).

@@ -14,9 +14,21 @@ Runbook de despliegue y operación para ejecutar **mi-api** en producción con
 - Acceso SSH al host y permisos de `sudo` para administrar `/etc/systemd/system/`.
 
 > [!TIP]
-> **Runbook privado local:** Si prefieres tener un archivo con las IPs, usuarios y comandos
-> exactos de tu VPS listos para copiar y pegar, puedes duplicar esta guía como `docs/prod.local.md`.
-> Este archivo ya se encuentra en `.gitignore` para prevenir fugas accidentales a Git.
+> **Crear tu propio runbook privado (`prod.local.md`):**
+> Si prefieres tener un archivo con las IPs, usuarios y comandos exactos de tu VPS listos para
+> copiar y pegar sin exponer tus datos a Git (ya protegido en `.gitignore`):
+>
+> - **Paso 1:** Copia la plantilla:
+>
+> ```bash
+> cp docs/prod.md docs/prod.local.md
+> ```
+>
+> - **Paso 2:** Haz un **Buscar y Reemplazar** en `prod.local.md` de estos 5 valores:
+>   - `mi-servidor` IP o dominio de tu VPS.
+>   - `mi-usuario` Tu usuario Linux (actualiza SSH, rsync y Systemd).
+>   - `-p 22` Tu puerto SSH si es personalizado.
+>   - `3000` El puerto de tu API en producción si difiere.
 
 <details>
 <summary>📋 Preparar un servidor VPS nuevo desde cero en Ubuntu</summary>
