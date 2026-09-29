@@ -15,3 +15,6 @@ Thumbs.db
 .env
 .env.*
 !.env.example
+
+# Documentación privada y runbooks locales
+docs/*.local.md

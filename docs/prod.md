@@ -13,6 +13,11 @@ Runbook de despliegue y operación para ejecutar **mi-api** en producción con
 - **Podman Compose** instalado en el servidor.
 - Acceso SSH al host y permisos de `sudo` para administrar `/etc/systemd/system/`.
 
+> [!TIP]
+> **Runbook privado local:** Si prefieres tener un archivo con las IPs, usuarios y comandos
+> exactos de tu VPS listos para copiar y pegar, puedes duplicar esta guía como `docs/prod.local.md`.
+> Este archivo ya se encuentra en `.gitignore` para prevenir fugas accidentales a Git.
+
 <details>
 <summary>📋 Preparar un servidor VPS nuevo desde cero en Ubuntu</summary>
 
@@ -340,10 +345,10 @@ sudo systemctl status mi-api mi-api-worker
 
 ```bash
 # Probar respuesta HTTP real del endpoint de salud
-curl -I http://localhost:8001/health
+curl -I http://localhost:3000/health
 
 # Comprobar que el puerto esté activo y en escucha en el sistema
-ss -tulpn | grep 8001
+ss -tulpn | grep 3000
 ```
 
 ### Diagnóstico del contenedor de base de datos (Podman)
