@@ -1,9 +1,6 @@
 # Dependencias del proyecto
 node_modules/
 
-# Prisma
-/migrations/
-
 # Basura del sistema
 .DS_Store
 Thumbs.db

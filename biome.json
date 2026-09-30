@@ -13,7 +13,6 @@
 			"!!**/node_modules",
 			"!!**/.pnpm-store",
 			"!!**/migrations",
-			"!!**/src/generated",
 			"!!**/src/prisma/contract.d.ts",
 			"!!**/src/prisma/contract.json",
 			"!!**/scripts/*.json"
