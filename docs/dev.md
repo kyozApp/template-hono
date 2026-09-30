@@ -79,6 +79,56 @@ pnpm prisma db verify
 pnpm dev
 ```
 
+### ⚠️ Modificación de Enums Nativos (`MIGRATION.PLANNING_FAILED`)
+
+PostgreSQL no permite eliminar, renombrar ni reordenar valores de un `ENUM` nativo de forma
+automática (solo permite añadir al final con `ADD VALUE`). Si eliminas o renombras opciones de un
+enum en `src/prisma/contract.ts`, `pnpm prisma db update` fallará con un error de planificación.
+
+#### Procedimiento para solucionarlo
+
+##### 1. Ejecutar el script SQL en la base de datos (vía DBeaver, TablePlus o `psql`)
+
+Por ejemplo, si necesitas cambiar los roles de tu sistema reemplazando `VIEWER` por nuevos roles:
+
+```sql
+-- 1. Crear el nuevo enum con los valores que declaraste en contract.ts
+CREATE TYPE "Role_new" AS ENUM (
+  'SUPERADMIN',
+  'ADMIN',
+  'MANAGER',
+  'USER'
+);
+
+-- 2. Quitar temporalmente el valor default de la columna
+ALTER TABLE "User" ALTER COLUMN "role" DROP DEFAULT;
+
+-- 3. Mapear los valores viejos a los nuevos sin perder datos
+ALTER TABLE "User"
+  ALTER COLUMN "role" TYPE "Role_new"
+    USING (
+      CASE "role"::text
+        WHEN 'VIEWER' THEN 'USER'::"Role_new"
+        ELSE "role"::text::"Role_new"
+      END
+    );
+
+-- 4. Reasignar el valor por defecto declarado en tu contrato
+ALTER TABLE "User" ALTER COLUMN "role" SET DEFAULT 'USER'::"Role_new";
+
+-- 5. Eliminar el enum viejo y renombrar el nuevo
+DROP TYPE "Role";
+ALTER TYPE "Role_new" RENAME TO "Role";
+```
+
+##### 2. Re-emitir el contrato y sincronizar con Prisma
+
+```bash
+pnpm prisma contract emit
+pnpm prisma db update
+pnpm prisma db verify
+```
+
 ---
 
 ## 📋 Referencia de Comandos (Desarrollo)
