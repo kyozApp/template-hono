@@ -15,3 +15,7 @@ Thumbs.db
 
 # Documentación privada y runbooks locales
 docs/*.local.md
+
+# Respaldos y volcados de base de datos
+*.sql
+*.dump

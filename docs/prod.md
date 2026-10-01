@@ -1,89 +1,26 @@
 # 🚀 Producción
 
-Runbook de despliegue y operación para ejecutar **mi-api** en producción con
-**Systemd**, **PostgreSQL** y el flujo operativo declarativo de **Prisma 8**.
+Guía operativa para preparar el entorno de producción de la aplicación.
 
 ---
 
-## ✅ Requisitos Previos
-
-- **Servidor Linux** Ubuntu con `systemd`.
-- **Node.js**: `24.21.0`
-- **pnpm**: `12.3.4`
-- **Podman Compose** instalado en el servidor.
-- Acceso SSH al host y permisos de `sudo` para administrar `/etc/systemd/system/`.
-
-> [!TIP]
-> **Crear tu propio runbook privado (`prod.local.md`):**
-> Si prefieres tener un archivo con las IPs, usuarios y comandos exactos de tu VPS listos para
-> copiar y pegar sin exponer tus datos a Git (ya protegido en `.gitignore`):
->
-> - **Paso 1:** Copia la plantilla:
->
-> ```bash
-> cp docs/prod.md docs/prod.local.md
-> ```
->
-> - **Paso 2:** Haz un **Buscar y Reemplazar** en `prod.local.md` de estos 5 valores:
->   - `mi-servidor` IP o dominio de tu VPS.
->   - `mi-usuario` Tu usuario Linux (actualiza SSH, rsync y Systemd).
->   - `-p 22` Tu puerto SSH si es personalizado.
->   - `3000` El puerto de tu API en producción si difiere.
-
 <details>
-<summary>📋 Preparar un servidor VPS nuevo desde cero en Ubuntu</summary>
+<summary>⚠️ Antes de empezar: Preparar tu copia privada (prod.local.md)</summary>
 
-Si tu servidor VPS está recién creado, ejecuta estos pasos para instalar y configurar el entorno:
-
-### 1. Actualizar el sistema operativo
-
-```bash
-sudo apt update && sudo apt upgrade -y
-```
-
-### 2. Instalar herramientas esenciales
+Para no exponer la IP ni las credenciales SSH de tu servidor en Git, crea tu propia guía
+privada (ya protegida en `.gitignore`):
 
 ```bash
-sudo apt install -y curl unzip build-essential
+cp docs/prod.md docs/prod.local.md
 ```
 
-### 3. Instalar pnpm y Node.js
+Abre `docs/prod.local.md`, presiona `Ctrl + F` y reemplaza los datos de tu servidor VPS:
 
-```bash
-curl -fsSL https://get.pnpm.io/install.sh | sh -
-source ~/.bashrc
-pnpm runtime set node lts -g
-```
-
-Verificar versiones:
-
-```bash
-node -v
-pnpm -v
-```
-
-### 4. Instalar Podman Rootless con persistencia
-
-```bash
-sudo apt install -y podman podman-compose
-systemctl --user enable --now podman.socket
-systemctl --user enable --now podman-restart.service
-loginctl enable-linger $USER
-```
-
-Verificar persistencia linger activa (`Linger=yes`):
-
-```bash
-loginctl show-user $USER | grep Linger
-```
-
-### 5. Probar y limpiar contenedor de prueba
-
-```bash
-podman run --rm docker.io/library/hello-world
-podman rmi docker.io/library/hello-world
-podman network prune -f
-```
+- **`mi-servidor`**: Dirección IP o dominio de tu servidor VPS.
+- **`mi-usuario`**: Tu usuario Linux en el VPS (usado en SSH, rsync y Systemd).
+- **`-p 22`**: Tu puerto SSH si utilizas uno personalizado.
+- **`prod_user`**: Usuario de PostgreSQL que asignarás en tu `.env` y se llamará `POSTGRES_USER`.
+- **`8001`**: Puerto de la aplicación web que asignarás en tu `.env` y se llamará `PORT`.
 
 </details>
 
@@ -91,12 +28,15 @@ podman network prune -f
 
 ## 🚀 Despliegue Inicial (Primera Vez)
 
+<details>
+<summary>📋 Ver procedimiento de despliegue inicial (9 pasos)</summary>
+
 ### 1. Sincronizar el código al servidor
 
 Desde tu máquina local, transfiere el código mediante `rsync`:
 
 ```bash
-rsync -avz -e 'ssh -p 22' --exclude '.env' --exclude 'node_modules/' --exclude 'dist/' --exclude 'migrations/' ./ mi-usuario@mi-servidor:~/proyectos/mi-api/
+rsync -avz -e 'ssh -p 22' --exclude 'node_modules/' --exclude '.git/' --exclude 'dist/' --exclude '.env' ~/proyectos/mi-api/ mi-usuario@mi-servidor:~/proyectos/mi-api/
 ```
 
 ### 2. Conectarse al servidor VPS
@@ -115,28 +55,43 @@ cd ~/proyectos/mi-api
 
 ### 3. Configurar variables de entorno de producción
 
-Copia la plantilla y edita las variables definitivas del servidor:
+Copia la plantilla y abre el editor:
 
 ```bash
 cp .env.example .env
 nano .env
 ```
 
-### 4. Levantar la base de datos (PostgreSQL 18)
+**Modifica las variables base existentes:**
 
-Inicia el contenedor dedicado definido en `compose.yaml`:
+- **`PORT`**: Puerto interno donde correrá la API (ej. `8001`).
+- **`CORS_ORIGIN`**: Orígenes permitidos para peticiones CORS (ej. `https://mi-dominio.com` o `*`).
+- **`DATABASE_URL`**: Cadena de conexión de PostgreSQL para Prisma 8 en producción.
 
-```bash
-podman-compose up -d
-```
+**Agrega al final del archivo las variables requeridas por `compose.yaml`:**
 
-### 5. Instalar dependencias
+- **`POSTGRES_PORT`**: Puerto expuesto para PostgreSQL en `compose.yaml`.
+- **`POSTGRES_DB`**: Nombre de la base de datos de producción en `compose.yaml`.
+- **`POSTGRES_USER`**: Usuario administrador de PostgreSQL en `compose.yaml`.
+- **`POSTGRES_PASSWORD`**: Contraseña del usuario de PostgreSQL en `compose.yaml`.
+
+> [!NOTE]
+> Los campos `POSTGRES_*` son utilizados por `compose.yaml` para inicializar el contenedor
+> y deben coincidir con las credenciales declaradas dentro de `DATABASE_URL`.
+
+### 4. Instalar dependencias
 
 ```bash
 pnpm i
 ```
 
-### 6. Inicializar base de datos y crear Superadmin
+### 5. Iniciar contenedores de base de datos
+
+```bash
+podman-compose up -d
+```
+
+### 6. Inicializar base de datos y crear superadministrador
 
 ```bash
 pnpm prisma contract emit
@@ -145,13 +100,15 @@ pnpm prisma db verify
 pnpm seed
 ```
 
-### 7. Compilar la aplicación para producción
+### 7. Compilar la aplicación y el worker para producción
 
 ```bash
 pnpm build
 ```
 
-### 8. Crear y activar los servicios en Systemd
+### 8. Crear los servicios en Systemd
+
+La arquitectura desacopla el tráfico web de los procesos cron en dos unidades independientes:
 
 #### Servicio de la API REST (`mi-api.service`)
 
@@ -235,7 +192,7 @@ SyslogIdentifier=mi-api-worker
 WantedBy=multi-user.target
 ```
 
-#### Activar e iniciar ambos servicios
+### 9. Registrar e iniciar ambos servicios
 
 ```bash
 sudo systemctl daemon-reload
@@ -243,35 +200,29 @@ sudo systemctl enable --now mi-api mi-api-worker
 sudo systemctl status mi-api mi-api-worker
 ```
 
+</details>
+
 ---
 
 ## 🔄 Actualizaciones Posteriores
 
+<details>
+<summary>📋 Ver procedimiento de actualización (3 pasos)</summary>
+
 ### 1. Transferir cambios desde tu máquina local
 
 ```bash
-rsync -avz -e 'ssh -p 22' --exclude '.env' --exclude 'node_modules/' --exclude 'dist/' --exclude 'migrations/' ./ mi-usuario@mi-servidor:~/proyectos/mi-api/
+rsync -avz -e 'ssh -p 22' --exclude 'node_modules/' --exclude '.git/' --exclude 'dist/' --exclude '.env' ~/proyectos/mi-api/ mi-usuario@mi-servidor:~/proyectos/mi-api/
 ```
 
 ### 2. Conectarse por SSH al servidor
 
 ```bash
 ssh -p 22 mi-usuario@mi-servidor
-```
-
-### 3. En el servidor VPS: actualizar, compilar y reiniciar
-
-Navega al directorio del proyecto:
-
-```bash
 cd ~/proyectos/mi-api
 ```
 
-Pausar el worker (solo si modificaste la base de datos o tareas en segundo plano):
-
-```bash
-sudo systemctl stop mi-api-worker
-```
+### 3. En el servidor VPS: actualizar, compilar y reiniciar
 
 Instalar dependencias:
 
@@ -279,7 +230,7 @@ Instalar dependencias:
 pnpm i
 ```
 
-Actualizar esquema de base de datos (solo si hubo cambios en `src/prisma/contract.ts`):
+Actualizar base de datos (solo si hubo modificaciones en `src/prisma/contract.ts`):
 
 ```bash
 pnpm prisma contract emit
@@ -293,19 +244,42 @@ Compilar la nueva versión:
 pnpm build
 ```
 
-Reiniciar la API y reanudar el worker:
+Reiniciar ambos servicios en Systemd:
 
 ```bash
-# Reinicio instantáneo del servidor HTTP
-sudo systemctl restart mi-api
-
-# Volver a encender el worker con la nueva versión
-sudo systemctl start mi-api-worker
+sudo systemctl restart mi-api mi-api-worker
 ```
+
+</details>
+
+---
+
+## 🗄️ Base de Datos y Disaster Recovery (Producción)
+
+<details>
+<summary>📋 Ver comandos de exportación y restauración</summary>
+
+### 1. Exportar (Copia de seguridad completa)
+
+```bash
+mkdir -p ~/backups/mi-api
+podman exec -i template_hono_prod_db pg_dump -U prod_user -Fc -d template_hono_db > ~/backups/mi-api/backup-$(date +%F-%H%M%S).dump
+```
+
+### 2. Importar (Restaurar copia ante fallos)
+
+```bash
+podman exec -i template_hono_prod_db pg_restore -U prod_user -d template_hono_db --clean --if-exists < ~/backups/mi-api/backup_a_restaurar.dump
+```
+
+</details>
 
 ---
 
 ## 📊 Monitoreo y Operación
+
+<details>
+<summary>📋 Ver comandos de logs, estado y diagnóstico</summary>
 
 ### Inspeccionar estado y logs en tiempo real
 
@@ -313,10 +287,13 @@ sudo systemctl start mi-api-worker
 # Ver estado de ambos servicios
 sudo systemctl status mi-api mi-api-worker
 
-# Ver logs en vivo de ambos servicios
-journalctl -u mi-api -u mi-api-worker -f
+# Ver logs en vivo de la API
+journalctl -u mi-api -f
 
-# Ver últimas 100 líneas
+# Ver logs en vivo del worker de segundo plano
+journalctl -u mi-api-worker -f
+
+# Ver últimas 100 líneas combinadas
 journalctl -u mi-api -u mi-api-worker -n 100 --no-pager
 ```
 
@@ -324,14 +301,13 @@ journalctl -u mi-api -u mi-api-worker -n 100 --no-pager
 
 ```bash
 # Filtrar exclusivamente errores (sin ruido informativo)
-journalctl -u mi-api -p err --no-pager
-journalctl -u mi-api-worker -p err --no-pager
+journalctl -u mi-api -u mi-api-worker -p err --no-pager
 
 # Ver logs de una ventana de tiempo específica (ejemplo: últimos 15 minutos)
 journalctl -u mi-api --since "15 minutes ago"
 
 # Ver logs generados desde el último reinicio del servidor
-journalctl -u mi-api -b
+journalctl -u mi-api -u mi-api-worker -b
 
 # Verificar uso de espacio en disco de los registros del sistema
 journalctl --disk-usage
@@ -340,57 +316,28 @@ journalctl --disk-usage
 ### Pausar, deshabilitar o reanudar servicios (Mantenimiento)
 
 ```bash
-# Pausar temporalmente ambos servicios (solo en la sesión actual)
+# Pausar temporalmente ambos servicios
 sudo systemctl stop mi-api mi-api-worker
-sudo systemctl status mi-api mi-api-worker
 
 # Evitar que arranquen automáticamente en reinicios del host
 sudo systemctl disable mi-api mi-api-worker
-sudo systemctl is-enabled mi-api mi-api-worker
 
-# Volver a habilitar el arranque automático e iniciar ambos servicios de inmediato
+# Volver a habilitar el arranque automático e iniciarlos de inmediato
 sudo systemctl enable --now mi-api mi-api-worker
 sudo systemctl status mi-api mi-api-worker
 ```
 
-### Diagnóstico de red y salud de la API (Smoke Test)
+### Diagnóstico de red y salud de la aplicación (Smoke Test)
 
 ```bash
 # Probar respuesta HTTP real del endpoint de salud
-curl -I http://localhost:3000/health
+curl -I http://localhost:8001/health
 
 # Comprobar que el puerto esté activo y en escucha en el sistema
-ss -tulpn | grep 3000
+ss -tulpn | grep 8001
 ```
 
-### Diagnóstico del contenedor de base de datos (Podman)
-
-```bash
-# Verificar estado y tiempo de actividad del contenedor de PostgreSQL
-podman ps -f name=mi_api_db
-
-# Ver logs del contenedor ante fallos de conexión o autenticación
-podman logs mi_api_db
-
-# Reiniciar el contenedor de base de datos de forma aislada
-podman restart mi_api_db
-```
-
----
-
-## 📋 Referencia de Comandos (Producción)
-
-| Comando             | Ejecuta internamente                     | Propósito                                               |
-| :------------------ | :--------------------------------------- | :------------------------------------------------------ |
-| `pnpm build`        | `tsc`                                    | Compila TypeScript a JavaScript optimizado en `dist/`.  |
-| `pnpm seed`         | `tsx --env-file=.env src/prisma/seed.ts` | Inserta el superadmin inicial (solo primer despliegue). |
-| `pnpm start`        | `node --env-file=.env dist/index.js`     | Inicia la API en producción con Node.js puro.           |
-| `pnpm worker:start` | `node --env-file=.env dist/worker.js`    | Inicia el worker en producción con Node.js puro.        |
-
-> [!NOTE]
-> En un servidor de producción real, `pnpm start` y `pnpm worker:start` son gestionados
-> automáticamente en segundo plano por los servicios de **Systemd** (`mi-api.service`
-> y `mi-api-worker.service`).
+</details>
 
 ---
 

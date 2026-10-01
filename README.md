@@ -19,26 +19,14 @@ cd mi-api
 
 ### 2. Personalizar la plantilla
 
-Edita los siguientes archivos para adaptar la plantilla al nombre de tu proyecto:
-
-- **`package.json`**: actualiza `"name"` (`mi-api`).
-- **`.env.example`**: configura `PORT`, `DATABASE_URL` y variables de PostgreSQL
-  (`POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD`).
-- **`compose.yaml`**: actualiza `container_name` (`mi_api_db`).
-- **`src/app.ts`**: actualiza `title` con el nombre oficial de tu servicio API.
-- **`docs/dev.md`**: actualiza la ruta del proyecto (`cd ~/proyectos/mi-api`).
-- **`docs/prod.md`**:
-  - Con el buscador (`Ctrl + F`) reemplaza en este archivo:
-    - `mi-api` por el nombre de tu proyecto.
-  - Actualiza el campo `Description` de cada servicio en Systemd:
-    - En `mi-api.service`: descripción de tu API (`Mi API REST Service`).
-    - En `mi-api-worker.service`: descripción del worker de tu API (`Mi API Worker`).
+1. En **`package.json`**, actualiza el campo `"name"` con el nombre de tu proyecto.
+2. En tu editor, presiona `Ctrl + Shift + F` (búsqueda global) y reemplaza estos 2 valores:
+   - **`mi-api`**: Nombre de la carpeta de tu proyecto.
+   - **`template_hono_db`**: Nombre de tu base de datos en PostgreSQL.
 
 ### 3. Continuar en desarrollo local
 
-Una vez renombrado el proyecto, abre la **[Guía de Desarrollo Local (docs/dev.md)](docs/dev.md)**
-para instalar dependencias, conectar a los servicios de tus dotfiles, inicializar Prisma 8 y
-arrancar el servidor.
+Abre la **[Guía de Desarrollo Local](docs/dev.md)** para preparar tu entorno en desarrollo.
 
 ---
 
