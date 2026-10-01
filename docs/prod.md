@@ -122,7 +122,7 @@ Pega la siguiente configuración:
 
 ```ini
 [Unit]
-Description=Mi API REST Service
+Description=mi-api REST Service
 After=network.target
 
 [Service]
@@ -163,7 +163,7 @@ Pega la siguiente configuración:
 
 ```ini
 [Unit]
-Description=Mi API Worker (Background Tasks)
+Description=mi-api Worker Service
 After=network.target mi-api.service
 
 [Service]
