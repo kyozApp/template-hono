@@ -1,10 +1,12 @@
 import { Hono } from "hono";
+import { timeout } from "hono/timeout";
 
 import { describeRoute, resolver } from "hono-openapi";
 import * as v from "valibot";
 
 import type { AppVariables } from "../../config/types.js";
 import { requireRole } from "../../middlewares/auth.middleware.js";
+import { customTimeoutException } from "../../middlewares/timeoutException.js";
 import {
 	envelopeSchema,
 	validator,
@@ -21,6 +23,10 @@ import {
 
 export const userRouter = new Hono<AppVariables>();
 
+// Tiempo de espera de 10s máximo para las rutas
+userRouter.use("*", timeout(10_000, customTimeoutException));
+
+// Permisos de rol para acceder a las rutas
 userRouter.use("*", requireRole(["SUPERADMIN", "ADMIN"]));
 
 // ============================================================

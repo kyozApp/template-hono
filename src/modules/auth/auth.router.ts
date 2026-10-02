@@ -1,10 +1,12 @@
 import { Hono } from "hono";
+import { timeout } from "hono/timeout";
 
 import { describeRoute, resolver } from "hono-openapi";
 import * as v from "valibot";
 
 import type { AppVariables } from "../../config/types.js";
 import { requireRole } from "../../middlewares/auth.middleware.js";
+import { customTimeoutException } from "../../middlewares/timeoutException.js";
 import {
 	envelopeSchema,
 	validator,
@@ -17,6 +19,9 @@ import {
 } from "./auth.validation.js";
 
 export const authRouter = new Hono<AppVariables>();
+
+// Tiempo de espera de 10s máximo para las rutas
+authRouter.use("*", timeout(10_000, customTimeoutException));
 
 // ============================================================
 // QUERIES (Consultas / Lectura)

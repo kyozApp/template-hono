@@ -1,10 +1,8 @@
 import type { Hono } from "hono";
 import { cors } from "hono/cors";
 import { requestId } from "hono/request-id";
-import { timeout } from "hono/timeout";
 
 import { env } from "../config/env.js";
-import { customTimeoutException } from "./timeoutException.js";
 
 /**
  * Registra los middlewares transversales sobre la instancia de Hono.
@@ -23,7 +21,4 @@ export const registerMiddlewares = (app: Hono) => {
 			credentials: true,
 		}),
 	);
-
-	// 3. Control de tiempo de espera (10 segundos)
-	app.use("*", timeout(10000, customTimeoutException));
 };
