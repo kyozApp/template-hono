@@ -1,6 +1,6 @@
 # 🚀 Producción
 
-Guía operativa para preparar el entorno de producción de la aplicación.
+Guía operativa para desplegar y mantener la aplicación en el entorno de producción.
 
 ---
 
@@ -18,6 +18,7 @@ Abre `docs/prod.local.md`, presiona `Ctrl + F` y reemplaza los datos de tu servi
 
 - **`mi-servidor`**: Dirección IP o dominio de tu servidor VPS.
 - **`mi-usuario`**: Tu usuario Linux en el VPS (usado en SSH, rsync y Systemd).
+- **`mi-api`**: Nombre de tu proyecto (rutas, servicios de Systemd y `SyslogIdentifier`).
 - **`-p 22`**: Tu puerto SSH si utilizas uno personalizado.
 - **`prod_user`**: Usuario de PostgreSQL que asignarás en tu `.env` y se llamará `POSTGRES_USER`.
 - **`8001`**: Puerto de la aplicación web que asignarás en tu `.env` y se llamará `PORT`.
@@ -26,7 +27,7 @@ Abre `docs/prod.local.md`, presiona `Ctrl + F` y reemplaza los datos de tu servi
 
 ---
 
-## 🚀 Despliegue Inicial (Primera Vez)
+## 🚀 Primera Vez
 
 <details>
 <summary>📋 Ver procedimiento de despliegue inicial (9 pasos)</summary>
@@ -108,7 +109,11 @@ pnpm build
 
 ### 8. Crear los servicios en Systemd
 
-La arquitectura desacopla el tráfico web de los procesos cron en dos unidades independientes:
+La arquitectura desacopla el tráfico web de los procesos cron en dos unidades independientes.
+
+> [!IMPORTANT]
+> Verifica la ruta real de Node.js en tu VPS con `which node` y ajusta `ExecStart` si no
+> coincide con `/home/mi-usuario/.local/share/pnpm/bin/node`.
 
 #### Servicio de la API REST (`mi-api.service`)
 
@@ -204,10 +209,10 @@ sudo systemctl status mi-api mi-api-worker
 
 ---
 
-## 🔄 Actualizaciones Posteriores
+## 🔄 Cada Actualización
 
 <details>
-<summary>📋 Ver procedimiento de actualización (3 pasos)</summary>
+<summary>📋 Ver procedimiento de actualización (4 pasos)</summary>
 
 ### 1. Transferir cambios desde tu máquina local
 
@@ -222,7 +227,20 @@ ssh -p 22 mi-usuario@mi-servidor
 cd ~/proyectos/mi-api
 ```
 
-### 3. En el servidor VPS: actualizar, compilar y reiniciar
+### 3. Respaldar la base de datos antes de migrar (obligatorio)
+
+`prisma db update` es el único paso de la actualización que puede alterar datos. Genera una
+copia de seguridad antes de continuar:
+
+```bash
+mkdir -p ~/backups/mi-api
+podman exec -i template_hono_prod_db pg_dump -U prod_user -Fc -d template_hono_db > ~/backups/mi-api/backup-$(date +%F-%H%M%S).dump
+```
+
+> [!TIP]
+> Para restaurar esta copia ante un fallo, consulta la **[Guía de Base de Datos](database.md)**.
+
+### 4. Actualizar, compilar y reiniciar
 
 Instalar dependencias:
 
@@ -248,28 +266,6 @@ Reiniciar ambos servicios en Systemd:
 
 ```bash
 sudo systemctl restart mi-api mi-api-worker
-```
-
-</details>
-
----
-
-## 🗄️ Base de Datos y Disaster Recovery (Producción)
-
-<details>
-<summary>📋 Ver comandos de exportación y restauración</summary>
-
-### 1. Exportar (Copia de seguridad completa)
-
-```bash
-mkdir -p ~/backups/mi-api
-podman exec -i template_hono_prod_db pg_dump -U prod_user -Fc -d template_hono_db > ~/backups/mi-api/backup-$(date +%F-%H%M%S).dump
-```
-
-### 2. Importar (Restaurar copia ante fallos)
-
-```bash
-podman exec -i template_hono_prod_db pg_restore -U prod_user -d template_hono_db --clean --if-exists < ~/backups/mi-api/backup_a_restaurar.dump
 ```
 
 </details>
@@ -367,4 +363,5 @@ ss -tulpn | grep 8001
 ---
 
 - ⬅️ [Volver al README](../README.md)
-- 📘 [Guía de Desarrollo (dev.md)](dev.md) ➡️
+- 📘 [Guía de Desarrollo (dev.md)](dev.md)
+- 🗄️ [Guía de Base de Datos (database.md)](database.md)

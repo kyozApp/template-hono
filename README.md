@@ -30,6 +30,17 @@ Abre la **[Guía de Desarrollo Local](docs/dev.md)** para preparar tu entorno en
 
 ---
 
+## 📚 Documentación
+
+- 📘 **[Desarrollo (dev.md)](docs/dev.md)**: Primera vez y flujo diario en local.
+- ⚙️ **[Producción (prod.md)](docs/prod.md)**: Despliegue inicial, actualizaciones y monitoreo.
+- 🗄️ **[Base de Datos (database.md)](docs/database.md)**: Consola, respaldos, migración MySQL y
+  mantenimiento de Enums.
+- 🛠️ **[Scripts (scripts/README.md)](scripts/README.md)**: Scripts puntuales de mantenimiento y
+  migración de datos.
+
+---
+
 ## 📄 Licencia
 
 Este proyecto se distribuye bajo la licencia [MIT](LICENSE).
