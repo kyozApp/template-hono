@@ -19,19 +19,20 @@ export const UserService = {
 	// ============================================================
 
 	/**
-	 * Listar todos los usuarios del sistema ordenados por fecha de creación descendente.
+	 * Listar todos los usuarios activos y no eliminados del sistema ordenados por fecha de creación descendente.
 	 */
 	async list(): Promise<ListUserResponseOutput> {
-		const users = await db.orm.public.User.select(
-			"id",
-			"name",
-			"username",
-			"email",
-			"role",
-			"isActive",
-			"createdAt",
-			"updatedAt",
-		)
+		const users = await db.orm.public.User.where({ isDeleted: false })
+			.select(
+				"id",
+				"name",
+				"username",
+				"email",
+				"role",
+				"isActive",
+				"createdAt",
+				"updatedAt",
+			)
 			.orderBy((u) => u.createdAt.desc())
 			.all();
 
@@ -39,12 +40,15 @@ export const UserService = {
 	},
 
 	/**
-	 * Obtener los detalles de un usuario por su ID.
+	 * Obtener los detalles de un usuario no eliminado por su ID.
 	 */
 	async findById(
 		params: DetailUserParamsOutput,
 	): Promise<DetailUserResponseOutput> {
-		const user = await db.orm.public.User.where({ id: params.id })
+		const user = await db.orm.public.User.where({
+			id: params.id,
+			isDeleted: false,
+		})
 			.select(
 				"id",
 				"name",
@@ -86,10 +90,10 @@ export const UserService = {
 			throw UserErrors.emailAlreadyExists();
 		}
 
-		// 2. Hashear contraseña con Argon2
+		// 3. Hashear contraseña con Argon2
 		const hashedPassword = await argon2.hash(password);
 
-		// 3. Crear registro en PostgreSQL
+		// 4. Crear registro en PostgreSQL
 		await db.orm.public.User.create({
 			name,
 			username,
@@ -97,17 +101,18 @@ export const UserService = {
 			password: hashedPassword,
 			role,
 			isActive,
+			isDeleted: false,
 		});
 	},
 
 	/**
-	 * Actualizar parcialmente los datos de un usuario existente.
+	 * Actualizar parcialmente los datos de un usuario existente no eliminado.
 	 */
 	async update(
 		params: UpdateUserParamsOutput,
 		data: UpdateUserBodyOutput,
 	): Promise<void> {
-		// 1. Verificar existencia del usuario
+		// 1. Verificar existencia del usuario (lanza error si no existe o si fue eliminado)
 		const existing = await this.findById(params);
 
 		// 2. Si el username cambia, verificar unicidad
@@ -153,7 +158,7 @@ export const UserService = {
 	},
 
 	/**
-	 * Eliminar un usuario y sus sesiones activas (evita auto-eliminación).
+	 * Borrado lógico (soft delete) de un usuario y revocación de sus sesiones activas (evita auto-eliminación).
 	 */
 	async delete(
 		params: DeleteUserParamsOutput,
@@ -164,21 +169,25 @@ export const UserService = {
 			throw UserErrors.cannotDeleteSelf();
 		}
 
-		// 2. Verificar existencia
+		// 2. Verificar existencia y que no esté previamente eliminado
 		await this.findById(params);
 
-		// 3. Eliminar sesiones asociadas primero (integridad referencial)
+		// 3. Revocar todas las sesiones activas asociadas
 		await db.orm.public.Session.where({ userId: params.id }).delete();
 
-		// 4. Eliminar el registro del usuario
-		await db.orm.public.User.where({ id: params.id }).delete();
+		// 4. Marcar borrado lógico y registrar marca de tiempo
+		await db.orm.public.User.where({ id: params.id }).update({
+			isDeleted: true,
+			deletedAt: new Date().toISOString(),
+			isActive: false,
+		});
 	},
 
 	/**
-	 * Alternar el estado activo/inactivo (isActive) de un usuario.
+	 * Alternar el estado activo/inactivo (isActive) de un usuario no eliminado.
 	 */
 	async toggleStatus(params: ToggleUserStatusParamsOutput): Promise<void> {
-		// 1. Verificar existencia del usuario
+		// 1. Verificar existencia del usuario (falla si está eliminado)
 		const existing = await this.findById(params);
 
 		// 2. Invertir estado actual

@@ -62,6 +62,7 @@ export const AuthService = {
 			password: hashedPassword,
 			role: "USER",
 			isActive: true,
+			isDeleted: false,
 		});
 	},
 
@@ -77,18 +78,23 @@ export const AuthService = {
 			throw AuthErrors.userNotFound();
 		}
 
-		// 2. Verificar estado de la cuenta
+		// 2. Verificar si la cuenta ha sido eliminada lógicamente
+		if (user.isDeleted) {
+			throw AuthErrors.deletedAccount();
+		}
+
+		// 3. Verificar estado activo de la cuenta
 		if (!user.isActive) {
 			throw AuthErrors.inactiveAccount();
 		}
 
-		// 3. Verificar contraseña provista
+		// 4. Verificar contraseña provista
 		const isPasswordValid = await argon2.verify(user.password, password);
 		if (!isPasswordValid) {
 			throw AuthErrors.invalidCredentials();
 		}
 
-		// 4. Crear sesión activa válida por 12 horas
+		// 5. Crear sesión activa válida por 12 horas
 		const expirationDate = new Date(Date.now() + 1000 * 60 * 60 * 12);
 
 		const session = await db.orm.public.Session.create({
@@ -96,7 +102,7 @@ export const AuthService = {
 			expiresAt: expirationDate.toISOString(),
 		});
 
-		// 5. Retornar token y perfil del usuario autenticado
+		// 6. Retornar token y perfil del usuario autenticado
 		const authData = {
 			token: session.id,
 			user: {

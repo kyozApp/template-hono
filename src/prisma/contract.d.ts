@@ -18,7 +18,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'454f88d8e4a197228d503e3dfa6158cd25ea0c9b46d68a04c463b79c622a3d53'>;
+  StorageHashBase<'c1ce44c39655a9949e68d6ffba82b97a08b8bbf5564152190055f2674c499ec1'>;
 export type ExecutionHash =
   ExecutionHashBase<'c7e886d8999a0a888933c5bc21bf580be5f4e878f0ca296088fc90d7a342100e'>;
 export type ProfileHash =
@@ -243,9 +243,11 @@ export type FieldOutputTypes = {
     };
     readonly User: {
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly deletedAt: CodecTypes['pg/timestamptz-string@1']['output'] | null;
       readonly email: CodecTypes['pg/text@1']['output'];
       readonly id: CodecTypes['pg/uuid@1']['output'];
       readonly isActive: CodecTypes['pg/bool@1']['output'];
+      readonly isDeleted: CodecTypes['pg/bool@1']['output'];
       readonly name: CodecTypes['pg/text@1']['output'];
       readonly password: CodecTypes['pg/text@1']['output'];
       readonly role: 'SUPERADMIN' | 'ADMIN' | 'USER' | 'VIEWER';
@@ -265,9 +267,11 @@ export type FieldInputTypes = {
     };
     readonly User: {
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly deletedAt: CodecTypes['pg/timestamptz-string@1']['input'] | null;
       readonly email: CodecTypes['pg/text@1']['input'];
       readonly id: CodecTypes['pg/uuid@1']['input'];
       readonly isActive: CodecTypes['pg/bool@1']['input'];
+      readonly isDeleted: CodecTypes['pg/bool@1']['input'];
       readonly name: CodecTypes['pg/text@1']['input'];
       readonly password: CodecTypes['pg/text@1']['input'];
       readonly role: 'SUPERADMIN' | 'ADMIN' | 'USER' | 'VIEWER';
@@ -287,9 +291,11 @@ export type StorageColumnTypes = {
     };
     readonly User: {
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly deletedAt: CodecTypes['pg/timestamptz-string@1']['output'] | null;
       readonly email: CodecTypes['pg/text@1']['output'];
       readonly id: CodecTypes['pg/uuid@1']['output'];
       readonly isActive: CodecTypes['pg/bool@1']['output'];
+      readonly isDeleted: CodecTypes['pg/bool@1']['output'];
       readonly name: CodecTypes['pg/text@1']['output'];
       readonly password: CodecTypes['pg/text@1']['output'];
       readonly role: 'SUPERADMIN' | 'ADMIN' | 'USER' | 'VIEWER';
@@ -309,9 +315,11 @@ export type StorageColumnInputTypes = {
     };
     readonly User: {
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly deletedAt: CodecTypes['pg/timestamptz-string@1']['input'] | null;
       readonly email: CodecTypes['pg/text@1']['input'];
       readonly id: CodecTypes['pg/uuid@1']['input'];
       readonly isActive: CodecTypes['pg/bool@1']['input'];
+      readonly isDeleted: CodecTypes['pg/bool@1']['input'];
       readonly name: CodecTypes['pg/text@1']['input'];
       readonly password: CodecTypes['pg/text@1']['input'];
       readonly role: 'SUPERADMIN' | 'ADMIN' | 'USER' | 'VIEWER';
@@ -333,9 +341,11 @@ export namespace Models {
   };
   export type public_User = {
     createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
+    deletedAt: CodecTypes['pg/timestamptz-string@1']['output'] | null;
     email: CodecTypes['pg/text@1']['output'];
     id: CodecTypes['pg/uuid@1']['output'];
     isActive: CodecTypes['pg/bool@1']['output'];
+    isDeleted: CodecTypes['pg/bool@1']['output'];
     name: CodecTypes['pg/text@1']['output'];
     password: CodecTypes['pg/text@1']['output'];
     role: 'SUPERADMIN' | 'ADMIN' | 'USER' | 'VIEWER';
@@ -417,6 +427,12 @@ type ContractBase = Omit<
                   readonly nullable: false;
                   readonly many: false;
                 };
+                readonly deletedAt: {
+                  readonly dataType: 'pg/timestamptz';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly nullable: true;
+                  readonly many: false;
+                };
                 readonly email: {
                   readonly dataType: 'pg/text';
                   readonly codecId: 'pg/text@1';
@@ -436,6 +452,16 @@ type ContractBase = Omit<
                   readonly default: {
                     readonly kind: 'literal';
                     readonly value: DefaultLiteralValue<'pg/bool@1', true>;
+                  };
+                  readonly many: false;
+                };
+                readonly isDeleted: {
+                  readonly dataType: 'pg/bool';
+                  readonly codecId: 'pg/bool@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/bool@1', false>;
                   };
                   readonly many: false;
                 };
@@ -571,6 +597,13 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/timestamptz-string@1';
                 };
               };
+              readonly deletedAt: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                };
+              };
               readonly email: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
@@ -580,6 +613,10 @@ type ContractBase = Omit<
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
               };
               readonly isActive: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
+              };
+              readonly isDeleted: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
               };
@@ -629,9 +666,11 @@ type ContractBase = Omit<
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly createdAt: { readonly column: 'createdAt' };
+                readonly deletedAt: { readonly column: 'deletedAt' };
                 readonly email: { readonly column: 'email' };
                 readonly id: { readonly column: 'id' };
                 readonly isActive: { readonly column: 'isActive' };
+                readonly isDeleted: { readonly column: 'isDeleted' };
                 readonly name: { readonly column: 'name' };
                 readonly password: { readonly column: 'password' };
                 readonly role: { readonly column: 'role' };

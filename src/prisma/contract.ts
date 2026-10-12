@@ -18,6 +18,8 @@ export const contract = defineContract({}, ({ field, model, rel }) => {
 			password: field.text(),
 			role: field.column(pg.enum(Role)).default("USER"),
 			isActive: field.boolean().default(true),
+			isDeleted: field.boolean().default(false),
+			deletedAt: field.temporal.timestamptzString().optional(),
 			createdAt: field.temporal.createdAtString(),
 			updatedAt: field.temporal.updatedAtString(),
 		},

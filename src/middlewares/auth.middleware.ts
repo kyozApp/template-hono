@@ -44,7 +44,18 @@ export const requireRole = (allowedRoles: Role[]) =>
 			});
 		}
 
-		// 4. Comprobar si el usuario continúa activo
+		// 4. Comprobar si el usuario fue eliminado lógicamente
+		if (user.isDeleted) {
+			await db.orm.public.Session.where({ id: token })
+				.delete()
+				.catch(() => {});
+			throw new AppException(401, {
+				message: "La cuenta de usuario ha sido eliminada.",
+				code: "USER_DELETED",
+			});
+		}
+
+		// 5. Comprobar si el usuario continúa activo
 		if (!user.isActive) {
 			await db.orm.public.Session.where({ id: token })
 				.delete()
@@ -55,7 +66,7 @@ export const requireRole = (allowedRoles: Role[]) =>
 			});
 		}
 
-		// 5. Control de Acceso Basado en Roles (RBAC) con bypass de SUPERADMIN
+		// 6. Control de Acceso Basado en Roles (RBAC) con bypass de SUPERADMIN
 		if (user.role !== "SUPERADMIN" && !allowedRoles.includes(user.role)) {
 			throw new AppException(403, {
 				message: "No tiene permisos para acceder a este recurso.",
@@ -63,7 +74,7 @@ export const requireRole = (allowedRoles: Role[]) =>
 			});
 		}
 
-		// 6. Inyectar sessionId y user al contexto de Hono
+		// 7. Inyectar sessionId y user al contexto de Hono
 		c.set("sessionId", token);
 		c.set("user", {
 			id: user.id,

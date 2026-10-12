@@ -104,6 +104,13 @@
                   "kind": "scalar"
                 }
               },
+              "deletedAt": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
               "email": {
                 "nullable": false,
                 "type": {
@@ -119,6 +126,13 @@
                 }
               },
               "isActive": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "isDeleted": {
                 "nullable": false,
                 "type": {
                   "codecId": "pg/bool@1",
@@ -186,6 +200,9 @@
                 "createdAt": {
                   "column": "createdAt"
                 },
+                "deletedAt": {
+                  "column": "deletedAt"
+                },
                 "email": {
                   "column": "email"
                 },
@@ -194,6 +211,9 @@
                 },
                 "isActive": {
                   "column": "isActive"
+                },
+                "isDeleted": {
+                  "column": "isDeleted"
                 },
                 "name": {
                   "column": "name"
@@ -280,6 +300,11 @@
                   "dataType": "pg/timestamptz",
                   "nullable": false
                 },
+                "deletedAt": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "dataType": "pg/timestamptz",
+                  "nullable": true
+                },
                 "email": {
                   "codecId": "pg/text@1",
                   "dataType": "pg/text",
@@ -296,6 +321,15 @@
                   "default": {
                     "kind": "literal",
                     "value": true
+                  },
+                  "nullable": false
+                },
+                "isDeleted": {
+                  "codecId": "pg/bool@1",
+                  "dataType": "pg/bool",
+                  "default": {
+                    "kind": "literal",
+                    "value": false
                   },
                   "nullable": false
                 },
@@ -375,7 +409,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "454f88d8e4a197228d503e3dfa6158cd25ea0c9b46d68a04c463b79c622a3d53"
+    "storageHash": "c1ce44c39655a9949e68d6ffba82b97a08b8bbf5564152190055f2674c499ec1"
   },
   "execution": {
     "executionHash": "c7e886d8999a0a888933c5bc21bf580be5f4e878f0ca296088fc90d7a342100e",

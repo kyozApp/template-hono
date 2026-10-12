@@ -26,6 +26,13 @@ export const AuthErrors = {
 			code: "INACTIVE_ACCOUNT",
 		}),
 
+	deletedAccount: () =>
+		new AppException(401, {
+			message:
+				"Esta cuenta ha sido eliminada. Por favor, contacte al administrador.",
+			code: "DELETED_ACCOUNT",
+		}),
+
 	invalidCredentials: () =>
 		new AppException(401, {
 			message: "Credenciales incorrectas.",
