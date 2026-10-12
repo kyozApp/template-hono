@@ -240,27 +240,27 @@
               "columns": {
                 "createdAt": {
                   "codecId": "pg/timestamptz-string@1",
-                  "nativeType": "timestamptz",
+                  "dataType": "pg/timestamptz",
                   "nullable": false
                 },
                 "expiresAt": {
                   "codecId": "pg/timestamptz-string@1",
-                  "nativeType": "timestamptz",
+                  "dataType": "pg/timestamptz",
                   "nullable": false
                 },
                 "id": {
                   "codecId": "pg/uuid@1",
-                  "nativeType": "uuid",
+                  "dataType": "pg/uuid",
                   "nullable": false
                 },
                 "updatedAt": {
                   "codecId": "pg/timestamptz-string@1",
-                  "nativeType": "timestamptz",
+                  "dataType": "pg/timestamptz",
                   "nullable": false
                 },
                 "userId": {
                   "codecId": "pg/uuid@1",
-                  "nativeType": "uuid",
+                  "dataType": "pg/uuid",
                   "nullable": false
                 }
               },
@@ -277,45 +277,45 @@
               "columns": {
                 "createdAt": {
                   "codecId": "pg/timestamptz-string@1",
-                  "nativeType": "timestamptz",
+                  "dataType": "pg/timestamptz",
                   "nullable": false
                 },
                 "email": {
                   "codecId": "pg/text@1",
-                  "nativeType": "text",
+                  "dataType": "pg/text",
                   "nullable": false
                 },
                 "id": {
                   "codecId": "pg/uuid@1",
-                  "nativeType": "uuid",
+                  "dataType": "pg/uuid",
                   "nullable": false
                 },
                 "isActive": {
                   "codecId": "pg/bool@1",
+                  "dataType": "pg/bool",
                   "default": {
                     "kind": "literal",
                     "value": true
                   },
-                  "nativeType": "bool",
                   "nullable": false
                 },
                 "name": {
                   "codecId": "pg/text@1",
-                  "nativeType": "text",
+                  "dataType": "pg/text",
                   "nullable": false
                 },
                 "password": {
                   "codecId": "pg/text@1",
-                  "nativeType": "text",
+                  "dataType": "pg/text",
                   "nullable": false
                 },
                 "role": {
                   "codecId": "pg/enum@1",
+                  "dataType": "pg/enum",
                   "default": {
                     "kind": "literal",
                     "value": "USER"
                   },
-                  "nativeType": "Role",
                   "nullable": false,
                   "typeParams": {
                     "typeName": "Role"
@@ -329,12 +329,12 @@
                 },
                 "updatedAt": {
                   "codecId": "pg/timestamptz-string@1",
-                  "nativeType": "timestamptz",
+                  "dataType": "pg/timestamptz",
                   "nullable": false
                 },
                 "username": {
                   "codecId": "pg/text@1",
-                  "nativeType": "text",
+                  "dataType": "pg/text",
                   "nullable": false
                 }
               },
@@ -375,10 +375,10 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "193368b14d312a4dd2e4afb9c5a57a9c13e2b718e5830c26395547455ebe0a88"
+    "storageHash": "454f88d8e4a197228d503e3dfa6158cd25ea0c9b46d68a04c463b79c622a3d53"
   },
   "execution": {
-    "executionHash": "2788537e105b1cc77efca6f40a5f2c2a963ea187feb6a6383d9d681c76b2880e",
+    "executionHash": "c7e886d8999a0a888933c5bc21bf580be5f4e878f0ca296088fc90d7a342100e",
     "mutations": {
       "defaults": [
         {
@@ -387,9 +387,9 @@
             "kind": "generator"
           },
           "ref": {
-            "column": "createdAt",
-            "namespace": "public",
-            "table": "Session"
+            "entry": "Session",
+            "field": "createdAt",
+            "namespace": "public"
           }
         },
         {
@@ -398,9 +398,9 @@
             "kind": "generator"
           },
           "ref": {
-            "column": "id",
-            "namespace": "public",
-            "table": "Session"
+            "entry": "Session",
+            "field": "id",
+            "namespace": "public"
           }
         },
         {
@@ -413,9 +413,9 @@
             "kind": "generator"
           },
           "ref": {
-            "column": "updatedAt",
-            "namespace": "public",
-            "table": "Session"
+            "entry": "Session",
+            "field": "updatedAt",
+            "namespace": "public"
           }
         },
         {
@@ -424,9 +424,9 @@
             "kind": "generator"
           },
           "ref": {
-            "column": "createdAt",
-            "namespace": "public",
-            "table": "User"
+            "entry": "User",
+            "field": "createdAt",
+            "namespace": "public"
           }
         },
         {
@@ -435,9 +435,9 @@
             "kind": "generator"
           },
           "ref": {
-            "column": "id",
-            "namespace": "public",
-            "table": "User"
+            "entry": "User",
+            "field": "id",
+            "namespace": "public"
           }
         },
         {
@@ -450,9 +450,9 @@
             "kind": "generator"
           },
           "ref": {
-            "column": "updatedAt",
-            "namespace": "public",
-            "table": "User"
+            "entry": "User",
+            "field": "updatedAt",
+            "namespace": "public"
           }
         }
       ]
@@ -461,6 +461,8 @@
   "capabilities": {
     "postgres": {
       "distinctOn": true,
+      "forKeyShare": true,
+      "forNoKeyUpdate": true,
       "jsonAgg": true,
       "lateral": true,
       "limit": true,
@@ -471,9 +473,14 @@
       "checkConstraint": true,
       "defaultInInsert": true,
       "enums": true,
+      "forShare": true,
+      "forUpdate": true,
       "insertOnConflictSkip": true,
       "insertOnConflictWithoutTarget": true,
       "lateral": true,
+      "lockNowait": true,
+      "lockOf": true,
+      "lockSkipLocked": true,
       "returning": true,
       "scalarList": true
     }

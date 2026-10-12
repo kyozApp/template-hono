@@ -57,7 +57,6 @@ const main = async () => {
 				password: await argon2.hash(u.passwordRaw),
 				role: u.role,
 				isActive: true,
-				isDeleted: false,
 			});
 			console.info(
 				`✅ Usuario ${u.role} (${user.username}) creado exitosamente.`,

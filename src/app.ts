@@ -17,7 +17,7 @@ registerMiddlewares(app);
 app.use("/assets/*", serveStatic({ root: "./static" }));
 
 // 3. Rutas de nivel servidor (no son lógica de negocio)
-app.get("/", (c) => c.text("Hello Hono!"));
+app.get("/", (c) => c.text("Página principal es docs!"));
 app.get("/health", (c) =>
 	c.json({
 		status: "ok",

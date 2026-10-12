@@ -1,5 +1,4 @@
 allowBuilds:
   argon2: true
   esbuild: true
-  msgpackr-extract: true
   workerd: true
