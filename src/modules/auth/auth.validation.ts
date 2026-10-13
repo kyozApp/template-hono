@@ -1,7 +1,5 @@
 import * as v from "valibot";
 
-import { ROLES } from "../../config/constants.js";
-
 // ============================================================
 // QUERIES (Consultas / Lectura)
 // ============================================================
@@ -18,7 +16,7 @@ export const verifySessionSchema = {
 				name: v.string(),
 				username: v.string(),
 				email: v.string(),
-				role: v.picklist(ROLES),
+				role: v.string(),
 			}),
 		}),
 		v.readonly(),
@@ -43,6 +41,10 @@ export const registerSchema = {
 			v.trim(),
 			v.minLength(1, "El nombre completo es obligatorio."),
 			v.minLength(3, "El nombre completo debe tener al menos 3 letras."),
+			v.maxLength(
+				255,
+				"El nombre completo no puede superar los 255 caracteres.",
+			),
 			v.description("Nombre completo del usuario."),
 			v.examples(["Carlos Ramírez"]),
 		),
@@ -52,6 +54,10 @@ export const registerSchema = {
 			v.toLowerCase(),
 			v.minLength(1, "El usuario es obligatorio."),
 			v.minLength(3, "El usuario debe tener al menos 3 caracteres."),
+			v.maxLength(
+				255,
+				"El nombre de usuario no puede superar los 255 caracteres.",
+			),
 			v.description("Nombre de usuario único (en minúsculas)."),
 			v.examples(["carlos.ramirez"]),
 		),
@@ -63,6 +69,10 @@ export const registerSchema = {
 			v.email(
 				"Ingresa un correo electrónico válido (ejemplo: nombre@correo.com).",
 			),
+			v.maxLength(
+				255,
+				"El correo electrónico no puede superar los 255 caracteres.",
+			),
 			v.description("Correo electrónico del usuario."),
 			v.examples(["carlos@empresa.com"]),
 		),
@@ -71,6 +81,7 @@ export const registerSchema = {
 			v.trim(),
 			v.minLength(1, "La contraseña es obligatoria."),
 			v.minLength(8, "La contraseña debe tener al menos 8 letras o números."),
+			v.maxLength(255, "La contraseña no puede superar los 255 caracteres."),
 			v.description("Contraseña (mínimo 8 caracteres)."),
 			v.examples(["Segura@1234"]),
 		),
@@ -90,6 +101,10 @@ export const loginSchema = {
 			v.toLowerCase(),
 			v.minLength(1, "El usuario es obligatorio."),
 			v.minLength(3, "El usuario debe tener al menos 3 caracteres."),
+			v.maxLength(
+				255,
+				"El nombre de usuario no puede superar los 255 caracteres.",
+			),
 			v.description("Nombre de usuario registrado."),
 			v.examples(["carlos.ramirez"]),
 		),
@@ -97,6 +112,7 @@ export const loginSchema = {
 			v.string("La contraseña ingresada no es válida."),
 			v.minLength(1, "La contraseña es obligatoria."),
 			v.minLength(8, "La contraseña debe tener al menos 8 letras o números."),
+			v.maxLength(255, "La contraseña no puede superar los 255 caracteres."),
 			v.description("Contraseña del usuario."),
 			v.examples(["Segura@1234"]),
 		),
@@ -109,7 +125,7 @@ export const loginSchema = {
 				name: v.string(),
 				username: v.string(),
 				email: v.string(),
-				role: v.picklist(ROLES),
+				role: v.string(),
 			}),
 		}),
 		v.readonly(),

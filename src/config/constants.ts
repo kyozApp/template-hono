@@ -11,7 +11,7 @@
  */
 
 // --- Roles de Usuario ---
-export const ROLES = ["SUPERADMIN", "ADMIN", "USER", "VIEWER"] as const;
+export const ROLES = ["ADMIN", "USER"] as const;
 export type Role = (typeof ROLES)[number];
 
 // --- Entornos de Ejecución ---

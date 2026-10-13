@@ -62,7 +62,6 @@ export const AuthService = {
 			password: hashedPassword,
 			role: "USER",
 			isActive: true,
-			isDeleted: false,
 		});
 	},
 

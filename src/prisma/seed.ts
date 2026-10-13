@@ -6,32 +6,12 @@ import { db } from "./db.js";
 
 const INITIAL_USERS = [
 	{
-		name: "Super Administrador",
-		username: "superadmin",
-		email: "superadmin@gmail.com",
-		passwordRaw: "123456789",
-		role: "SUPERADMIN" as const,
-	},
-	{
 		name: "Administrador",
 		username: "admin",
 		email: "admin@gmail.com",
 		passwordRaw: "123456789",
-		role: "ADMIN" as const,
-	},
-	{
-		name: "User",
-		username: "user",
-		email: "user@gmail.com",
-		passwordRaw: "123456789",
-		role: "USER" as const,
-	},
-	{
-		name: "Auditor Visitante",
-		username: "visitante",
-		email: "visitante@gmail.com",
-		passwordRaw: "123456789",
-		role: "VIEWER" as const,
+		role: "ADMIN",
+		isActive: true,
 	},
 ];
 
@@ -53,6 +33,7 @@ const main = async () => {
 				email: u.email,
 				password: await argon2.hash(u.passwordRaw),
 				role: u.role,
+				isActive: u.isActive,
 			});
 			console.info(
 				`✅ Usuario ${u.role} (${user.username}) creado exitosamente.`,

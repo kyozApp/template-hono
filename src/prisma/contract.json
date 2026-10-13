@@ -156,11 +156,8 @@
               "role": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/enum@1",
-                  "kind": "scalar",
-                  "typeParams": {
-                    "typeName": "Role"
-                  }
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
                 }
               },
               "updatedAt": {
@@ -243,18 +240,6 @@
     "namespaces": {
       "public": {
         "entries": {
-          "native_enum": {
-            "Role": {
-              "kind": "postgres-enum",
-              "members": [
-                "SUPERADMIN",
-                "ADMIN",
-                "USER",
-                "VIEWER"
-              ],
-              "typeName": "Role"
-            }
-          },
           "table": {
             "Session": {
               "columns": {
@@ -318,10 +303,6 @@
                 "isActive": {
                   "codecId": "pg/bool@1",
                   "dataType": "pg/bool",
-                  "default": {
-                    "kind": "literal",
-                    "value": true
-                  },
                   "nullable": false
                 },
                 "isDeleted": {
@@ -344,22 +325,9 @@
                   "nullable": false
                 },
                 "role": {
-                  "codecId": "pg/enum@1",
-                  "dataType": "pg/enum",
-                  "default": {
-                    "kind": "literal",
-                    "value": "USER"
-                  },
-                  "nullable": false,
-                  "typeParams": {
-                    "typeName": "Role"
-                  },
-                  "valueSet": {
-                    "entityKind": "valueSet",
-                    "entityName": "Role",
-                    "namespaceId": "public",
-                    "plane": "storage"
-                  }
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "nullable": false
                 },
                 "updatedAt": {
                   "codecId": "pg/timestamptz-string@1",
@@ -392,24 +360,13 @@
                 }
               ]
             }
-          },
-          "valueSet": {
-            "Role": {
-              "kind": "valueSet",
-              "values": [
-                "SUPERADMIN",
-                "ADMIN",
-                "USER",
-                "VIEWER"
-              ]
-            }
           }
         },
         "id": "public",
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "c1ce44c39655a9949e68d6ffba82b97a08b8bbf5564152190055f2674c499ec1"
+    "storageHash": "f7fdf075b8bf81fd9621f68577bcad67e5dc5e2ee4cf107f9fb55b82b267a428"
   },
   "execution": {
     "executionHash": "c7e886d8999a0a888933c5bc21bf580be5f4e878f0ca296088fc90d7a342100e",

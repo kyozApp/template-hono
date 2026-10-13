@@ -29,7 +29,7 @@ authRouter.use("*", timeout(10_000, customTimeoutException));
 
 authRouter.get(
 	"/verificar-sesion",
-	requireRole(["SUPERADMIN", "ADMIN", "USER", "VIEWER"]),
+	requireRole(["ADMIN", "USER"]),
 	describeRoute({
 		description: "Verifica si la sesión actual está activa y es válida.",
 		tags: ["Autenticación"],
@@ -142,7 +142,7 @@ authRouter.post(
 
 authRouter.post(
 	"/cerrar-sesion",
-	requireRole(["SUPERADMIN", "ADMIN", "USER", "VIEWER"]),
+	requireRole(["ADMIN", "USER"]),
 	describeRoute({
 		description: "Cierra la sesión activa invalidando el token.",
 		tags: ["Autenticación"],

@@ -10,7 +10,7 @@ transformación de registros existentes e importaciones de datos por consola.
 Desde la raíz del proyecto, ejecuta el script cargando el archivo de entorno:
 
 ```bash
-pnpm exec tsx --env-file=.env scripts/ejemplo_migracion.ts
+pnpm exec tsx --env-file=.env scripts/ejemplo.ts
 ```
 
 ---

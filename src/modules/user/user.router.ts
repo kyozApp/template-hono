@@ -27,7 +27,7 @@ export const userRouter = new Hono<AppVariables>();
 userRouter.use("*", timeout(10_000, customTimeoutException));
 
 // Permisos de rol para acceder a las rutas
-userRouter.use("*", requireRole(["SUPERADMIN", "ADMIN"]));
+userRouter.use("*", requireRole(["ADMIN"]));
 
 // ============================================================
 // QUERIES (Consultas / Lectura)
@@ -240,7 +240,7 @@ userRouter.post(
 	"/toggle-status/:id",
 	describeRoute({
 		description:
-			"Cambia el estado activo/inactivo de un usuario invirtiendo su valor actual.",
+			"Cambia el estado activo/inactivo de un usuario invirtiendo su valor actual (no permite auto-desactivación).",
 		tags: ["Usuarios"],
 		security: [{ bearerAuth: [] }],
 		responses: {
@@ -252,7 +252,7 @@ userRouter.post(
 					},
 				},
 			},
-			400: { description: "ID de usuario inválido." },
+			400: { description: "ID inválido o intento de auto-desactivación." },
 			401: { description: "No autenticado." },
 			403: { description: "Acceso denegado." },
 			404: { description: "Usuario no encontrado." },
@@ -261,7 +261,8 @@ userRouter.post(
 	validator("param", toggleUserStatusSchema.params),
 	async (c) => {
 		const params = c.req.valid("param");
-		await UserService.toggleStatus(params);
+		const currentUser = c.get("user");
+		await UserService.toggleStatus(params, currentUser.id);
 		return c.json(
 			{
 				success: true,

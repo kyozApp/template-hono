@@ -24,4 +24,10 @@ export const UserErrors = {
 			message: "No puedes eliminar tu propia cuenta de usuario.",
 			code: "CANNOT_DELETE_SELF",
 		}),
+
+	cannotDeactivateSelf: () =>
+		new AppException(400, {
+			message: "No puedes desactivar tu propia cuenta de usuario.",
+			code: "CANNOT_DEACTIVATE_SELF",
+		}),
 };

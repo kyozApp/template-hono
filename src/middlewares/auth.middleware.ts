@@ -66,8 +66,8 @@ export const requireRole = (allowedRoles: Role[]) =>
 			});
 		}
 
-		// 6. Control de Acceso Basado en Roles (RBAC) con bypass de SUPERADMIN
-		if (user.role !== "SUPERADMIN" && !allowedRoles.includes(user.role)) {
+		// 6. Control de Acceso Basado en Roles (RBAC)
+		if (!allowedRoles.includes(user.role as Role)) {
 			throw new AppException(403, {
 				message: "No tiene permisos para acceder a este recurso.",
 				code: "FORBIDDEN",
@@ -81,7 +81,7 @@ export const requireRole = (allowedRoles: Role[]) =>
 			name: user.name,
 			username: user.username,
 			email: user.email,
-			role: user.role,
+			role: user.role as Role,
 		});
 
 		await next();

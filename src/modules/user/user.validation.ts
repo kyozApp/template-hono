@@ -17,7 +17,7 @@ export const listUserSchema = {
 				name: v.string(),
 				username: v.string(),
 				email: v.string(),
-				role: v.picklist(ROLES),
+				role: v.string(),
 				isActive: v.boolean(),
 				createdAt: v.string(),
 				updatedAt: v.string(),
@@ -49,7 +49,7 @@ export const detailUserSchema = {
 			name: v.string(),
 			username: v.string(),
 			email: v.string(),
-			role: v.picklist(ROLES),
+			role: v.string(),
 			isActive: v.boolean(),
 			createdAt: v.string(),
 			updatedAt: v.string(),
@@ -79,6 +79,10 @@ export const createUserSchema = {
 			v.trim(),
 			v.minLength(1, "El nombre completo es obligatorio."),
 			v.minLength(3, "El nombre completo debe tener al menos 3 letras."),
+			v.maxLength(
+				255,
+				"El nombre completo no puede superar los 255 caracteres.",
+			),
 			v.description("Nombre completo del usuario."),
 			v.examples(["Carlos Ramírez López"]),
 		),
@@ -88,6 +92,10 @@ export const createUserSchema = {
 			v.toLowerCase(),
 			v.minLength(1, "El usuario es obligatorio."),
 			v.minLength(3, "El usuario debe tener al menos 3 caracteres."),
+			v.maxLength(
+				255,
+				"El nombre de usuario no puede superar los 255 caracteres.",
+			),
 			v.description("Nombre de usuario único."),
 			v.examples(["carlos.ramirez"]),
 		),
@@ -97,6 +105,10 @@ export const createUserSchema = {
 			v.toLowerCase(),
 			v.minLength(1, "El correo electrónico es obligatorio."),
 			v.email("Ingresa un correo electrónico válido."),
+			v.maxLength(
+				255,
+				"El correo electrónico no puede superar los 255 caracteres.",
+			),
 			v.description("Correo electrónico del usuario."),
 			v.examples(["carlos@empresa.com"]),
 		),
@@ -105,22 +117,17 @@ export const createUserSchema = {
 			v.trim(),
 			v.minLength(1, "La contraseña es obligatoria."),
 			v.minLength(8, "La contraseña debe tener al menos 8 letras o números."),
+			v.maxLength(255, "La contraseña no puede superar los 255 caracteres."),
 			v.description("Contraseña del usuario (mínimo 8 caracteres)."),
 			v.examples(["Segura@1234"]),
 		),
-		role: v.optional(
-			v.pipe(
-				v.picklist(ROLES, "El rol especificado no es válido."),
-				v.description("Rol asignado al usuario."),
-			),
-			"USER",
+		role: v.pipe(
+			v.picklist(ROLES, "El rol especificado no es válido."),
+			v.description("Rol asignado al usuario."),
 		),
-		isActive: v.optional(
-			v.pipe(
-				v.boolean("isActive debe ser un booleano."),
-				v.description("Estado activo/inactivo de la cuenta."),
-			),
-			true,
+		isActive: v.pipe(
+			v.boolean("isActive debe ser un booleano."),
+			v.description("Estado activo/inactivo de la cuenta."),
 		),
 	}),
 };
@@ -128,7 +135,7 @@ export const createUserSchema = {
 export type CreateUserBodyOutput = v.InferOutput<typeof createUserSchema.body>;
 
 /**
- * Actualizar usuario (PATCH parcial)
+ * Actualizar usuario (solo la contraseña es opcional)
  */
 export const updateUserSchema = {
 	params: v.object({
@@ -140,57 +147,61 @@ export const updateUserSchema = {
 		),
 	}),
 	body: v.object({
-		name: v.optional(
-			v.pipe(
-				v.string("El nombre ingresado no es válido."),
-				v.trim(),
-				v.minLength(1, "El nombre completo no puede estar vacío."),
-				v.minLength(3, "El nombre completo debe tener al menos 3 letras."),
-				v.description("Nombre completo del usuario."),
-				v.examples(["Carlos Ramírez López"]),
+		name: v.pipe(
+			v.string("El nombre ingresado no es válido."),
+			v.trim(),
+			v.minLength(1, "El nombre completo no puede estar vacío."),
+			v.minLength(3, "El nombre completo debe tener al menos 3 letras."),
+			v.maxLength(
+				255,
+				"El nombre completo no puede superar los 255 caracteres.",
 			),
+			v.description("Nombre completo del usuario."),
+			v.examples(["Carlos Ramírez López"]),
 		),
-		username: v.optional(
-			v.pipe(
-				v.string("El usuario ingresado no es válido."),
-				v.trim(),
-				v.toLowerCase(),
-				v.minLength(1, "El usuario no puede estar vacío."),
-				v.minLength(3, "El usuario debe tener al menos 3 caracteres."),
-				v.description("Nombre de usuario único."),
-				v.examples(["carlos.ramirez"]),
+		username: v.pipe(
+			v.string("El usuario ingresado no es válido."),
+			v.trim(),
+			v.toLowerCase(),
+			v.minLength(1, "El usuario no puede estar vacío."),
+			v.minLength(3, "El usuario debe tener al menos 3 caracteres."),
+			v.maxLength(
+				255,
+				"El nombre de usuario no puede superar los 255 caracteres.",
 			),
+			v.description("Nombre de usuario único."),
+			v.examples(["carlos.ramirez"]),
 		),
-		email: v.optional(
-			v.pipe(
-				v.string("El correo ingresado no es válido."),
-				v.trim(),
-				v.toLowerCase(),
-				v.email("Ingresa un correo electrónico válido."),
-				v.description("Correo electrónico del usuario."),
-				v.examples(["carlos@empresa.com"]),
+		email: v.pipe(
+			v.string("El correo ingresado no es válido."),
+			v.trim(),
+			v.toLowerCase(),
+			v.minLength(1, "El correo electrónico es obligatorio."),
+			v.email("Ingresa un correo electrónico válido."),
+			v.maxLength(
+				255,
+				"El correo electrónico no puede superar los 255 caracteres.",
 			),
+			v.description("Correo electrónico del usuario."),
+			v.examples(["carlos@empresa.com"]),
 		),
 		password: v.optional(
 			v.pipe(
 				v.string("La contraseña no es válida."),
 				v.trim(),
 				v.minLength(8, "La contraseña debe tener al menos 8 caracteres."),
+				v.maxLength(255, "La contraseña no puede superar los 255 caracteres."),
 				v.description("Nueva contraseña del usuario (opcional)."),
 				v.examples(["NuevaClave@1234"]),
 			),
 		),
-		role: v.optional(
-			v.pipe(
-				v.picklist(ROLES, "El rol especificado no es válido."),
-				v.description("Rol asignado al usuario."),
-			),
+		role: v.pipe(
+			v.picklist(ROLES, "El rol especificado no es válido."),
+			v.description("Rol asignado al usuario."),
 		),
-		isActive: v.optional(
-			v.pipe(
-				v.boolean("isActive debe ser un booleano."),
-				v.description("Estado activo/inactivo de la cuenta."),
-			),
+		isActive: v.pipe(
+			v.boolean("isActive debe ser un booleano."),
+			v.description("Estado activo/inactivo de la cuenta."),
 		),
 	}),
 };

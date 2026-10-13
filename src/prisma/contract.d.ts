@@ -18,7 +18,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'c1ce44c39655a9949e68d6ffba82b97a08b8bbf5564152190055f2674c499ec1'>;
+  StorageHashBase<'f7fdf075b8bf81fd9621f68577bcad67e5dc5e2ee4cf107f9fb55b82b267a428'>;
 export type ExecutionHash =
   ExecutionHashBase<'c7e886d8999a0a888933c5bc21bf580be5f4e878f0ca296088fc90d7a342100e'>;
 export type ProfileHash =
@@ -250,7 +250,7 @@ export type FieldOutputTypes = {
       readonly isDeleted: CodecTypes['pg/bool@1']['output'];
       readonly name: CodecTypes['pg/text@1']['output'];
       readonly password: CodecTypes['pg/text@1']['output'];
-      readonly role: 'SUPERADMIN' | 'ADMIN' | 'USER' | 'VIEWER';
+      readonly role: CodecTypes['pg/text@1']['output'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly username: CodecTypes['pg/text@1']['output'];
     };
@@ -274,7 +274,7 @@ export type FieldInputTypes = {
       readonly isDeleted: CodecTypes['pg/bool@1']['input'];
       readonly name: CodecTypes['pg/text@1']['input'];
       readonly password: CodecTypes['pg/text@1']['input'];
-      readonly role: 'SUPERADMIN' | 'ADMIN' | 'USER' | 'VIEWER';
+      readonly role: CodecTypes['pg/text@1']['input'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly username: CodecTypes['pg/text@1']['input'];
     };
@@ -298,7 +298,7 @@ export type StorageColumnTypes = {
       readonly isDeleted: CodecTypes['pg/bool@1']['output'];
       readonly name: CodecTypes['pg/text@1']['output'];
       readonly password: CodecTypes['pg/text@1']['output'];
-      readonly role: 'SUPERADMIN' | 'ADMIN' | 'USER' | 'VIEWER';
+      readonly role: CodecTypes['pg/text@1']['output'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly username: CodecTypes['pg/text@1']['output'];
     };
@@ -322,7 +322,7 @@ export type StorageColumnInputTypes = {
       readonly isDeleted: CodecTypes['pg/bool@1']['input'];
       readonly name: CodecTypes['pg/text@1']['input'];
       readonly password: CodecTypes['pg/text@1']['input'];
-      readonly role: 'SUPERADMIN' | 'ADMIN' | 'USER' | 'VIEWER';
+      readonly role: CodecTypes['pg/text@1']['input'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly username: CodecTypes['pg/text@1']['input'];
     };
@@ -348,7 +348,7 @@ export namespace Models {
     isDeleted: CodecTypes['pg/bool@1']['output'];
     name: CodecTypes['pg/text@1']['output'];
     password: CodecTypes['pg/text@1']['output'];
-    role: 'SUPERADMIN' | 'ADMIN' | 'USER' | 'VIEWER';
+    role: CodecTypes['pg/text@1']['output'];
     updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
     username: CodecTypes['pg/text@1']['output'];
     sessions: public_Session[];
@@ -449,10 +449,6 @@ type ContractBase = Omit<
                   readonly dataType: 'pg/bool';
                   readonly codecId: 'pg/bool@1';
                   readonly nullable: false;
-                  readonly default: {
-                    readonly kind: 'literal';
-                    readonly value: DefaultLiteralValue<'pg/bool@1', true>;
-                  };
                   readonly many: false;
                 };
                 readonly isDeleted: {
@@ -478,14 +474,9 @@ type ContractBase = Omit<
                   readonly many: false;
                 };
                 readonly role: {
-                  readonly dataType: 'pg/enum';
-                  readonly codecId: 'pg/enum@1';
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
                   readonly nullable: false;
-                  readonly default: {
-                    readonly kind: 'literal';
-                    readonly value: DefaultLiteralValue<'pg/enum@1', 'USER'>;
-                  };
-                  readonly typeParams: { readonly typeName: 'Role' };
                   readonly many: false;
                 };
                 readonly updatedAt: {
@@ -508,12 +499,6 @@ type ContractBase = Omit<
               ];
               indexes: readonly [];
               foreignKeys: readonly [];
-            };
-          };
-          readonly valueSet: {
-            readonly Role: {
-              readonly kind: 'valueSet';
-              readonly values: readonly ['SUPERADMIN', 'ADMIN', 'USER', 'VIEWER'];
             };
           };
         };
@@ -630,11 +615,7 @@ type ContractBase = Omit<
               };
               readonly role: {
                 readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/enum@1';
-                  readonly typeParams: { readonly typeName: 'Role' };
-                };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
               readonly updatedAt: {
                 readonly nullable: false;

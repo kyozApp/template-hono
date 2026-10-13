@@ -101,12 +101,11 @@ export const UserService = {
 			password: hashedPassword,
 			role,
 			isActive,
-			isDeleted: false,
 		});
 	},
 
 	/**
-	 * Actualizar parcialmente los datos de un usuario existente no eliminado.
+	 * Actualizar los datos de un usuario existente no eliminado (solo password es opcional).
 	 */
 	async update(
 		params: UpdateUserParamsOutput,
@@ -116,7 +115,7 @@ export const UserService = {
 		const existing = await this.findById(params);
 
 		// 2. Si el username cambia, verificar unicidad
-		if (data.username && data.username !== existing.username) {
+		if (data.username !== existing.username) {
 			const usernameTaken = await db.orm.public.User.first({
 				username: data.username,
 			});
@@ -126,7 +125,7 @@ export const UserService = {
 		}
 
 		// 3. Si el email cambia, verificar unicidad
-		if (data.email && data.email !== existing.email) {
+		if (data.email !== existing.email) {
 			const emailTaken = await db.orm.public.User.first({
 				email: data.email,
 			});
@@ -159,46 +158,57 @@ export const UserService = {
 
 	/**
 	 * Borrado lógico (soft delete) de un usuario y revocación de sus sesiones activas (evita auto-eliminación).
+	 * Renombra username y email para liberar restricciones de unicidad.
 	 */
 	async delete(
 		params: DeleteUserParamsOutput,
-		currentUserId?: string,
+		currentUserId: string,
 	): Promise<void> {
 		// 1. Evitar auto-eliminación
-		if (currentUserId && params.id === currentUserId) {
+		if (params.id === currentUserId) {
 			throw UserErrors.cannotDeleteSelf();
 		}
 
 		// 2. Verificar existencia y que no esté previamente eliminado
-		await this.findById(params);
+		const existing = await this.findById(params);
 
 		// 3. Revocar todas las sesiones activas asociadas
 		await db.orm.public.Session.where({ userId: params.id }).delete();
 
-		// 4. Marcar borrado lógico y registrar marca de tiempo
+		// 4. Marcar borrado lógico, liberar username/email y registrar marca de tiempo
 		await db.orm.public.User.where({ id: params.id }).update({
 			isDeleted: true,
 			deletedAt: new Date().toISOString(),
 			isActive: false,
+			email: `${existing.email}.deleted.${existing.id}`,
+			username: `${existing.username}.deleted.${existing.id}`,
 		});
 	},
 
 	/**
-	 * Alternar el estado activo/inactivo (isActive) de un usuario no eliminado.
+	 * Alternar el estado activo/inactivo (isActive) de un usuario no eliminado (evita auto-desactivación).
 	 */
-	async toggleStatus(params: ToggleUserStatusParamsOutput): Promise<void> {
-		// 1. Verificar existencia del usuario (falla si está eliminado)
+	async toggleStatus(
+		params: ToggleUserStatusParamsOutput,
+		currentUserId: string,
+	): Promise<void> {
+		// 1. Evitar auto-desactivación
+		if (params.id === currentUserId) {
+			throw UserErrors.cannotDeactivateSelf();
+		}
+
+		// 2. Verificar existencia del usuario (falla si está eliminado)
 		const existing = await this.findById(params);
 
-		// 2. Invertir estado actual
+		// 3. Invertir estado actual
 		const newIsActive = !existing.isActive;
 
-		// 3. Si se desactiva la cuenta, cerrar sus sesiones activas
+		// 4. Si se desactiva la cuenta, cerrar sus sesiones activas
 		if (!newIsActive) {
 			await db.orm.public.Session.where({ userId: params.id }).delete();
 		}
 
-		// 4. Aplicar cambio de estado
+		// 5. Aplicar cambio de estado
 		await db.orm.public.User.where({ id: params.id }).update({
 			isActive: newIsActive,
 		});
