@@ -13,14 +13,56 @@ export const listUserSchema = {
 	response: v.array(
 		v.pipe(
 			v.object({
-				id: v.pipe(v.string(), v.uuid()),
-				name: v.string(),
-				username: v.string(),
-				email: v.string(),
-				role: v.string(),
-				isActive: v.boolean(),
-				createdAt: v.string(),
-				updatedAt: v.string(),
+				id: v.pipe(
+					v.string(),
+					v.uuid(),
+					v.description("Identificador único UUIDv7 del usuario."),
+					v.examples(["019557a2-7b81-7f83-99b8-17a412b3c4d5"]),
+				),
+				name: v.pipe(
+					v.string(),
+					v.description("Nombre completo del usuario."),
+					v.examples(["Carlos Ramírez López"]),
+				),
+				username: v.pipe(
+					v.string(),
+					v.description("Nombre de usuario único."),
+					v.examples(["carlos.ramirez"]),
+				),
+				email: v.pipe(
+					v.string(),
+					v.email(),
+					v.description("Correo electrónico del usuario."),
+					v.examples(["carlos@empresa.com"]),
+				),
+				role: v.pipe(
+					v.string(),
+					v.description("Rol asignado al usuario."),
+					v.examples(["USER"]),
+				),
+				isActive: v.pipe(
+					v.boolean(),
+					v.description("Estado activo/inactivo de la cuenta."),
+					v.examples([true]),
+				),
+				createdAt: v.pipe(
+					v.string(),
+					v.isoTimestamp(
+						"La fecha de creación no tiene un formato ISO válido.",
+					),
+					v.description("Fecha y hora de creación en formato ISO 8601 UTC."),
+					v.examples(["2026-11-03T16:50:00.000Z"]),
+				),
+				updatedAt: v.pipe(
+					v.string(),
+					v.isoTimestamp(
+						"La fecha de actualización no tiene un formato ISO válido.",
+					),
+					v.description(
+						"Fecha y hora de última actualización en formato ISO 8601 UTC.",
+					),
+					v.examples(["2026-11-03T16:50:00.000Z"]),
+				),
 			}),
 			v.readonly(),
 		),
@@ -45,14 +87,54 @@ export const detailUserSchema = {
 	}),
 	response: v.pipe(
 		v.object({
-			id: v.pipe(v.string(), v.uuid()),
-			name: v.string(),
-			username: v.string(),
-			email: v.string(),
-			role: v.string(),
-			isActive: v.boolean(),
-			createdAt: v.string(),
-			updatedAt: v.string(),
+			id: v.pipe(
+				v.string(),
+				v.uuid(),
+				v.description("Identificador único UUIDv7 del usuario."),
+				v.examples(["019557a2-7b81-7f83-99b8-17a412b3c4d5"]),
+			),
+			name: v.pipe(
+				v.string(),
+				v.description("Nombre completo del usuario."),
+				v.examples(["Carlos Ramírez López"]),
+			),
+			username: v.pipe(
+				v.string(),
+				v.description("Nombre de usuario único."),
+				v.examples(["carlos.ramirez"]),
+			),
+			email: v.pipe(
+				v.string(),
+				v.email(),
+				v.description("Correo electrónico del usuario."),
+				v.examples(["carlos@empresa.com"]),
+			),
+			role: v.pipe(
+				v.string(),
+				v.description("Rol asignado al usuario."),
+				v.examples(["USER"]),
+			),
+			isActive: v.pipe(
+				v.boolean(),
+				v.description("Estado activo/inactivo de la cuenta."),
+				v.examples([true]),
+			),
+			createdAt: v.pipe(
+				v.string(),
+				v.isoTimestamp("La fecha de creación no tiene un formato ISO válido."),
+				v.description("Fecha y hora de creación en formato ISO 8601 UTC."),
+				v.examples(["2026-11-03T16:50:00.000Z"]),
+			),
+			updatedAt: v.pipe(
+				v.string(),
+				v.isoTimestamp(
+					"La fecha de actualización no tiene un formato ISO válido.",
+				),
+				v.description(
+					"Fecha y hora de última actualización en formato ISO 8601 UTC.",
+				),
+				v.examples(["2026-11-03T16:50:00.000Z"]),
+			),
 		}),
 		v.readonly(),
 	),
@@ -124,10 +206,12 @@ export const createUserSchema = {
 		role: v.pipe(
 			v.picklist(ROLES, "El rol especificado no es válido."),
 			v.description("Rol asignado al usuario."),
+			v.examples(["USER"]),
 		),
 		isActive: v.pipe(
 			v.boolean("isActive debe ser un booleano."),
 			v.description("Estado activo/inactivo de la cuenta."),
+			v.examples([true]),
 		),
 	}),
 };
@@ -198,10 +282,12 @@ export const updateUserSchema = {
 		role: v.pipe(
 			v.picklist(ROLES, "El rol especificado no es válido."),
 			v.description("Rol asignado al usuario."),
+			v.examples(["USER"]),
 		),
 		isActive: v.pipe(
 			v.boolean("isActive debe ser un booleano."),
 			v.description("Estado activo/inactivo de la cuenta."),
+			v.examples([true]),
 		),
 	}),
 };

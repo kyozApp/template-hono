@@ -17,9 +17,11 @@ export const contract = defineContract(
 				isActive: field.column(type.Boolean()),
 				isDeleted: field.column(type.Boolean()).default(false),
 				deletedAt: field.column(type.DateTime({ as: "string" })).optional(),
-				createdAt: field.column(type.DateTime()).onCreate(gen.now()),
+				createdAt: field
+					.column(type.DateTime({ as: "string" }))
+					.onCreate(gen.now()),
 				updatedAt: field
-					.column(type.DateTime())
+					.column(type.DateTime({ as: "string" }))
 					.onCreate(gen.now())
 					.onUpdate(gen.now()),
 			},
@@ -31,9 +33,11 @@ export const contract = defineContract(
 				id: field.column(type.Uuid()).id().onCreate(gen.uuid(7)),
 				userId: field.column(type.Uuid()),
 				expiresAt: field.column(type.DateTime({ as: "string" })),
-				createdAt: field.column(type.DateTime()).onCreate(gen.now()),
+				createdAt: field
+					.column(type.DateTime({ as: "string" }))
+					.onCreate(gen.now()),
 				updatedAt: field
-					.column(type.DateTime())
+					.column(type.DateTime({ as: "string" }))
 					.onCreate(gen.now())
 					.onUpdate(gen.now()),
 			},

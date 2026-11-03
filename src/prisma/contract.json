@@ -22,11 +22,8 @@
               "createdAt": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamptz-date@1",
-                  "kind": "scalar",
-                  "typeParams": {
-                    "precision": 3
-                  }
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
                 }
               },
               "expiresAt": {
@@ -46,11 +43,8 @@
               "updatedAt": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamptz-date@1",
-                  "kind": "scalar",
-                  "typeParams": {
-                    "precision": 3
-                  }
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
                 }
               },
               "userId": {
@@ -106,11 +100,8 @@
               "createdAt": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamptz-date@1",
-                  "kind": "scalar",
-                  "typeParams": {
-                    "precision": 3
-                  }
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
                 }
               },
               "deletedAt": {
@@ -172,11 +163,8 @@
               "updatedAt": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamptz-date@1",
-                  "kind": "scalar",
-                  "typeParams": {
-                    "precision": 3
-                  }
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
                 }
               },
               "username": {
@@ -256,12 +244,9 @@
             "Session": {
               "columns": {
                 "createdAt": {
-                  "codecId": "pg/timestamptz-date@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "dataType": "pg/timestamptz",
-                  "nullable": false,
-                  "typeParams": {
-                    "precision": 3
-                  }
+                  "nullable": false
                 },
                 "expiresAt": {
                   "codecId": "pg/timestamptz-string@1",
@@ -274,12 +259,9 @@
                   "nullable": false
                 },
                 "updatedAt": {
-                  "codecId": "pg/timestamptz-date@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "dataType": "pg/timestamptz",
-                  "nullable": false,
-                  "typeParams": {
-                    "precision": 3
-                  }
+                  "nullable": false
                 },
                 "userId": {
                   "codecId": "pg/uuid@1",
@@ -299,12 +281,9 @@
             "User": {
               "columns": {
                 "createdAt": {
-                  "codecId": "pg/timestamptz-date@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "dataType": "pg/timestamptz",
-                  "nullable": false,
-                  "typeParams": {
-                    "precision": 3
-                  }
+                  "nullable": false
                 },
                 "deletedAt": {
                   "codecId": "pg/timestamptz-string@1",
@@ -351,12 +330,9 @@
                   "nullable": false
                 },
                 "updatedAt": {
-                  "codecId": "pg/timestamptz-date@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "dataType": "pg/timestamptz",
-                  "nullable": false,
-                  "typeParams": {
-                    "precision": 3
-                  }
+                  "nullable": false
                 },
                 "username": {
                   "codecId": "pg/text@1",
@@ -390,19 +366,16 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "e3aef9f5d4da884a8a63260770d7bde4c6bd046445fb4c3a16a00365092951a3"
+    "storageHash": "f7fdf075b8bf81fd9621f68577bcad67e5dc5e2ee4cf107f9fb55b82b267a428"
   },
   "execution": {
-    "executionHash": "3b3117166fd8b838257b1f22702fb5ca4813c2fdb22a50fee8d882b97110229c",
+    "executionHash": "873cad9efcc5f08598b3e47e89c7abfd2d06ef70c30165e927d315223c0cc852",
     "mutations": {
       "defaults": [
         {
           "onCreate": {
-            "id": "timestampNow",
-            "kind": "generator",
-            "params": {
-              "precision": 3
-            }
+            "id": "timestamptzStringNow",
+            "kind": "generator"
           },
           "ref": {
             "entry": "Session",
@@ -423,18 +396,12 @@
         },
         {
           "onCreate": {
-            "id": "timestampNow",
-            "kind": "generator",
-            "params": {
-              "precision": 3
-            }
+            "id": "timestamptzStringNow",
+            "kind": "generator"
           },
           "onUpdate": {
-            "id": "timestampNow",
-            "kind": "generator",
-            "params": {
-              "precision": 3
-            }
+            "id": "timestamptzStringNow",
+            "kind": "generator"
           },
           "ref": {
             "entry": "Session",
@@ -444,11 +411,8 @@
         },
         {
           "onCreate": {
-            "id": "timestampNow",
-            "kind": "generator",
-            "params": {
-              "precision": 3
-            }
+            "id": "timestamptzStringNow",
+            "kind": "generator"
           },
           "ref": {
             "entry": "User",
@@ -469,18 +433,12 @@
         },
         {
           "onCreate": {
-            "id": "timestampNow",
-            "kind": "generator",
-            "params": {
-              "precision": 3
-            }
+            "id": "timestamptzStringNow",
+            "kind": "generator"
           },
           "onUpdate": {
-            "id": "timestampNow",
-            "kind": "generator",
-            "params": {
-              "precision": 3
-            }
+            "id": "timestamptzStringNow",
+            "kind": "generator"
           },
           "ref": {
             "entry": "User",

@@ -23,9 +23,9 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'e3aef9f5d4da884a8a63260770d7bde4c6bd046445fb4c3a16a00365092951a3'>;
+  StorageHashBase<'f7fdf075b8bf81fd9621f68577bcad67e5dc5e2ee4cf107f9fb55b82b267a428'>;
 export type ExecutionHash =
-  ExecutionHashBase<'3b3117166fd8b838257b1f22702fb5ca4813c2fdb22a50fee8d882b97110229c'>;
+  ExecutionHashBase<'873cad9efcc5f08598b3e47e89c7abfd2d06ef70c30165e927d315223c0cc852'>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
 
@@ -364,9 +364,8 @@ type ContractBase = Omit<
               columns: {
                 readonly createdAt: {
                   readonly dataType: 'pg/timestamptz';
-                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
-                  readonly typeParams: { readonly precision: 3 };
                   readonly many: false;
                 };
                 readonly expiresAt: {
@@ -383,9 +382,8 @@ type ContractBase = Omit<
                 };
                 readonly updatedAt: {
                   readonly dataType: 'pg/timestamptz';
-                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
-                  readonly typeParams: { readonly precision: 3 };
                   readonly many: false;
                 };
                 readonly userId: {
@@ -404,9 +402,8 @@ type ContractBase = Omit<
               columns: {
                 readonly createdAt: {
                   readonly dataType: 'pg/timestamptz';
-                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
-                  readonly typeParams: { readonly precision: 3 };
                   readonly many: false;
                 };
                 readonly deletedAt: {
@@ -463,9 +460,8 @@ type ContractBase = Omit<
                 };
                 readonly updatedAt: {
                   readonly dataType: 'pg/timestamptz';
-                  readonly codecId: 'pg/timestamptz-date@1';
+                  readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
-                  readonly typeParams: { readonly precision: 3 };
                   readonly many: false;
                 };
                 readonly username: {
@@ -507,8 +503,7 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: {
                   readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-date@1';
-                  readonly typeParams: { readonly precision: 3 };
+                  readonly codecId: 'pg/timestamptz-string@1';
                 };
               };
               readonly expiresAt: {
@@ -526,8 +521,7 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: {
                   readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-date@1';
-                  readonly typeParams: { readonly precision: 3 };
+                  readonly codecId: 'pg/timestamptz-string@1';
                 };
               };
               readonly userId: {
@@ -564,8 +558,7 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: {
                   readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-date@1';
-                  readonly typeParams: { readonly precision: 3 };
+                  readonly codecId: 'pg/timestamptz-string@1';
                 };
               };
               readonly deletedAt: {
@@ -607,8 +600,7 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: {
                   readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-date@1';
-                  readonly typeParams: { readonly precision: 3 };
+                  readonly codecId: 'pg/timestamptz-string@1';
                 };
               };
               readonly username: {
@@ -684,11 +676,7 @@ type ContractBase = Omit<
     readonly mutations: {
       readonly defaults: readonly [
         {
-          readonly onCreate: {
-            readonly id: 'timestampNow';
-            readonly kind: 'generator';
-            readonly params: { readonly precision: 3 };
-          };
+          readonly onCreate: { readonly id: 'timestamptzStringNow'; readonly kind: 'generator' };
           readonly ref: {
             readonly entry: 'Session';
             readonly field: 'createdAt';
@@ -704,16 +692,8 @@ type ContractBase = Omit<
           };
         },
         {
-          readonly onCreate: {
-            readonly id: 'timestampNow';
-            readonly kind: 'generator';
-            readonly params: { readonly precision: 3 };
-          };
-          readonly onUpdate: {
-            readonly id: 'timestampNow';
-            readonly kind: 'generator';
-            readonly params: { readonly precision: 3 };
-          };
+          readonly onCreate: { readonly id: 'timestamptzStringNow'; readonly kind: 'generator' };
+          readonly onUpdate: { readonly id: 'timestamptzStringNow'; readonly kind: 'generator' };
           readonly ref: {
             readonly entry: 'Session';
             readonly field: 'updatedAt';
@@ -721,11 +701,7 @@ type ContractBase = Omit<
           };
         },
         {
-          readonly onCreate: {
-            readonly id: 'timestampNow';
-            readonly kind: 'generator';
-            readonly params: { readonly precision: 3 };
-          };
+          readonly onCreate: { readonly id: 'timestamptzStringNow'; readonly kind: 'generator' };
           readonly ref: {
             readonly entry: 'User';
             readonly field: 'createdAt';
@@ -741,16 +717,8 @@ type ContractBase = Omit<
           };
         },
         {
-          readonly onCreate: {
-            readonly id: 'timestampNow';
-            readonly kind: 'generator';
-            readonly params: { readonly precision: 3 };
-          };
-          readonly onUpdate: {
-            readonly id: 'timestampNow';
-            readonly kind: 'generator';
-            readonly params: { readonly precision: 3 };
-          };
+          readonly onCreate: { readonly id: 'timestamptzStringNow'; readonly kind: 'generator' };
+          readonly onUpdate: { readonly id: 'timestamptzStringNow'; readonly kind: 'generator' };
           readonly ref: {
             readonly entry: 'User';
             readonly field: 'updatedAt';

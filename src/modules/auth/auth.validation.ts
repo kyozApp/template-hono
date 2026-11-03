@@ -10,13 +10,40 @@ import * as v from "valibot";
 export const verifySessionSchema = {
 	response: v.pipe(
 		v.object({
-			token: v.string(),
+			token: v.pipe(
+				v.string(),
+				v.uuid(),
+				v.description("Token de sesión activo (UUIDv7)."),
+				v.examples(["019557a2-7b81-7f83-99b8-17a412b3c4d5"]),
+			),
 			user: v.object({
-				id: v.pipe(v.string(), v.uuid()),
-				name: v.string(),
-				username: v.string(),
-				email: v.string(),
-				role: v.string(),
+				id: v.pipe(
+					v.string(),
+					v.uuid(),
+					v.description("Identificador único UUIDv7 del usuario."),
+					v.examples(["019557a2-7b81-7f83-99b8-17a412b3c4d5"]),
+				),
+				name: v.pipe(
+					v.string(),
+					v.description("Nombre completo del usuario."),
+					v.examples(["Carlos Ramírez"]),
+				),
+				username: v.pipe(
+					v.string(),
+					v.description("Nombre de usuario único."),
+					v.examples(["carlos.ramirez"]),
+				),
+				email: v.pipe(
+					v.string(),
+					v.email(),
+					v.description("Correo electrónico del usuario."),
+					v.examples(["carlos@empresa.com"]),
+				),
+				role: v.pipe(
+					v.string(),
+					v.description("Rol asignado al usuario."),
+					v.examples(["USER"]),
+				),
 			}),
 		}),
 		v.readonly(),
@@ -120,13 +147,40 @@ export const loginSchema = {
 	}),
 	response: v.pipe(
 		v.object({
-			token: v.string(),
+			token: v.pipe(
+				v.string(),
+				v.uuid(),
+				v.description("Token de sesión activo (UUIDv7)."),
+				v.examples(["019557a2-7b81-7f83-99b8-17a412b3c4d5"]),
+			),
 			user: v.object({
-				id: v.pipe(v.string(), v.uuid()),
-				name: v.string(),
-				username: v.string(),
-				email: v.string(),
-				role: v.string(),
+				id: v.pipe(
+					v.string(),
+					v.uuid(),
+					v.description("Identificador único UUIDv7 del usuario."),
+					v.examples(["019557a2-7b81-7f83-99b8-17a412b3c4d5"]),
+				),
+				name: v.pipe(
+					v.string(),
+					v.description("Nombre completo del usuario."),
+					v.examples(["Carlos Ramírez"]),
+				),
+				username: v.pipe(
+					v.string(),
+					v.description("Nombre de usuario único."),
+					v.examples(["carlos.ramirez"]),
+				),
+				email: v.pipe(
+					v.string(),
+					v.email(),
+					v.description("Correo electrónico del usuario."),
+					v.examples(["carlos@empresa.com"]),
+				),
+				role: v.pipe(
+					v.string(),
+					v.description("Rol asignado al usuario."),
+					v.examples(["ADMIN", "USER"]),
+				),
 			}),
 		}),
 		v.readonly(),
