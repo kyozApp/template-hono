@@ -22,6 +22,8 @@ cd mi-api
 1. En **`package.json`**, actualiza el campo `"name"` con el nombre de tu proyecto.
 2. En **`.env.example`**, actualiza el nombre de la base de datos `template_hono_db`
    con el nombre de tu base de datos en PostgreSQL.
+3. En **`compose.yaml`**, actualiza el nombre del proyecto `name: template_hono_prod`
+   y el nombre del contenedor `container_name: template_hono_prod_db`.
 
 ---
 
