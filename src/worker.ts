@@ -7,7 +7,7 @@ import { db } from "./prisma/db.js";
 const closeDatabaseConnection = async (): Promise<void> => {
 	try {
 		await db.close();
-		console.log("Conexión con la base de datos cerrada.");
+		console.info("Conexión con la base de datos cerrada.");
 	} catch (error) {
 		console.error("Error cerrando conexión con la base de datos:", error);
 	}
@@ -17,7 +17,7 @@ const closeDatabaseConnection = async (): Promise<void> => {
  * Responsabilidad única: Coordinar la secuencia de apagado ordenado del worker.
  */
 const handleGracefulShutdown = async (signal: string): Promise<void> => {
-	console.log(`\nWorker detenido vía ${signal}. Cerrando recursos...`);
+	console.info(`\nWorker detenido vía ${signal}. Cerrando recursos...`);
 	stopBackgroundTasks();
 	await closeDatabaseConnection();
 	process.exit(0);

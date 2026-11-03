@@ -10,7 +10,7 @@ const server = serve(
 		port: env.PORT,
 	},
 	(info) => {
-		console.log(`Servidor corriendo en http://localhost:${info.port}`);
+		console.info(`Servidor corriendo en http://localhost:${info.port}`);
 	},
 );
 
@@ -34,7 +34,7 @@ const closeHttpServer = (): Promise<void> =>
 const closeDatabaseConnection = async (): Promise<void> => {
 	try {
 		await db.close();
-		console.log("Conexión con la base de datos cerrada.");
+		console.info("Conexión con la base de datos cerrada.");
 	} catch (error) {
 		console.error("Error cerrando conexión con la base de datos:", error);
 	}
@@ -44,7 +44,7 @@ const closeDatabaseConnection = async (): Promise<void> => {
  * Responsabilidad única: Coordinar la secuencia de apagado ordenado del servidor HTTP.
  */
 const handleGracefulShutdown = async (signal: string): Promise<void> => {
-	console.log(`\nServidor detenido vía ${signal}. Cerrando recursos...`);
+	console.info(`\nServidor detenido vía ${signal}. Cerrando recursos...`);
 
 	// Temporizador de emergencia: forzar salida si no termina en 10 segundos
 	const forceTimeout = setTimeout(() => {
@@ -55,7 +55,7 @@ const handleGracefulShutdown = async (signal: string): Promise<void> => {
 
 	try {
 		await closeHttpServer();
-		console.log("Servidor HTTP cerrado.");
+		console.info("Servidor HTTP cerrado.");
 
 		await closeDatabaseConnection();
 	} catch (error) {

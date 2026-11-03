@@ -1,8 +1,8 @@
 # ⚡ Template Hono
 
-Plantilla base de desarrollo rápido para APIs backend y microservicios modernos, construida
-sobre **Hono**, **Node.js 24**, **Prisma 8 (Contract Builder)**, **PostgreSQL 18**, **Valibot**,
-**OpenAPI 3.1**, **Scalar UI**, **Argon2** y **Biome**.
+Plantilla base de desarrollo rápido para APIs backend y microservicios modernos,
+construida sobre **Hono**, **Node.js**, **Prisma 8**, **PostgreSQL 18**,
+**Valibot**, **OpenAPI**, **Scalar UI**, **Argon2** y **Biome**.
 
 ---
 
@@ -20,24 +20,8 @@ cd mi-api
 ### 2. Personalizar la plantilla
 
 1. En **`package.json`**, actualiza el campo `"name"` con el nombre de tu proyecto.
-2. En tu editor, presiona `Ctrl + Shift + F` (búsqueda global) y reemplaza estos 2 valores:
-   - **`mi-api`**: Nombre de la carpeta de tu proyecto.
-   - **`template_hono_db`**: Nombre de tu base de datos en PostgreSQL.
-
-### 3. Continuar en desarrollo local
-
-Abre la **[Guía de Desarrollo Local](docs/dev.md)** para preparar tu entorno en desarrollo.
-
----
-
-## 📚 Documentación
-
-- 📘 **[Desarrollo (dev.md)](docs/dev.md)**: Primera vez y flujo diario en local.
-- ⚙️ **[Producción (prod.md)](docs/prod.md)**: Despliegue inicial, actualizaciones y monitoreo.
-- 🗄️ **[Base de Datos (database.md)](docs/database.md)**: Consola, respaldos, migración MySQL y
-  mantenimiento de Enums.
-- 🛠️ **[Scripts (scripts/README.md)](scripts/README.md)**: Scripts puntuales de mantenimiento y
-  migración de datos.
+2. En **`.env.example`**, actualiza el nombre de la base de datos `template_hono_db`
+   con el nombre de tu base de datos en PostgreSQL.
 
 ---
 

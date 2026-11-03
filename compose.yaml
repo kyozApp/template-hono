@@ -4,24 +4,24 @@
 name: template_hono_prod
 
 services:
-    # ---------------------------------------------------------------------------
-    # 1. Base de Datos Relacional (PostgreSQL 18)
-    # ---------------------------------------------------------------------------
-    db:
-        image: docker.io/library/postgres:18-alpine
-        container_name: template_hono_prod_db
-        restart: always
-        ports:
-            - '${POSTGRES_PORT:?POSTGRES_PORT es requerido}:5432'
-        volumes:
-            - pgdata:/var/lib/postgresql
-        environment:
-            - POSTGRES_DB=${POSTGRES_DB:?POSTGRES_DB es requerido}
-            - POSTGRES_USER=${POSTGRES_USER:?POSTGRES_USER es requerido}
-            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?POSTGRES_PASSWORD es requerido}
+  # ---------------------------------------------------------------------------
+  # 1. Base de Datos Relacional (PostgreSQL 18)
+  # ---------------------------------------------------------------------------
+  db:
+    image: docker.io/library/postgres:18-alpine
+    container_name: template_hono_prod_db
+    restart: always
+    ports:
+      - "${POSTGRES_PORT:?POSTGRES_PORT es requerido}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:?POSTGRES_DB es requerido}
+      - POSTGRES_USER=${POSTGRES_USER:?POSTGRES_USER es requerido}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?POSTGRES_PASSWORD es requerido}
 
 # ===========================================================================
 # Volúmenes Persistentes
 # ===========================================================================
 volumes:
-    pgdata:
+  pgdata:

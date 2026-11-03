@@ -2,3 +2,5 @@ allowBuilds:
   argon2: true
   esbuild: true
   workerd: true
+minimumReleaseAgeExclude:
+  - argon2@0.45.2

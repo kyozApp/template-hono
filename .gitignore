@@ -19,3 +19,8 @@ docs/*.local.md
 # Respaldos y volcados de base de datos
 *.sql
 *.dump
+
+# IA
+/skills/
+/.agents/
+/.gemini/
